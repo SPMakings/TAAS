@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="64dp"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:text="T"
+        android:textColor="@android:color/white"
+        android:textSize="54sp" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="44dp"
+        android:gravity="center"
+        android:text="TAAS"
+        android:textColor="@color/colorAccent"
+        android:textSize="54sp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorAccent" />
+
+    <com.spm.taas.customview.TextViewIkarosLight
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="YOUR PROBLEMS OUR SOLUTIONS"
+        android:textColor="@color/colorAccent"
+        android:textSize="22sp" />
+
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/splash_signin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:text="SIGN IN"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="90dp"
+            android:layout_height="2px"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/or"
+            android:background="@color/colorAccent" />
+
+        <com.spm.taas.customview.TextViewIkarosLight
+            android:id="@+id/or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="6dp"
+            android:text="OR"
+            android:textColor="@color/colorAccent"
+            android:textSize="22sp" />
+
+        <View
+            android:layout_width="90dp"
+            android:layout_height="2px"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/or"
+            android:background="@color/colorAccent" />
+    </RelativeLayout>
+
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/splash_reg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REGISTER"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp" />
+
+</LinearLayout>

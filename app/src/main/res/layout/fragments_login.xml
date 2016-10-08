@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/back_me"
+                android:layout_width="wrap_content"
+                android:layout_gravity="start"
+                android:padding="10dp"
+                android:src="@drawable/ic_action_back_dark"
+                android:layout_height="wrap_content" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:text="T"
+                android:textColor="@android:color/white"
+                android:textSize="54sp" />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                app:hintTextAppearance="@android:style/TextAppearance.Medium">
+
+                <EditText
+                    android:id="@+id/txtUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    android:textSize="18sp"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:hintTextAppearance="@android:style/TextAppearance.Medium">
+
+                <EditText
+                    android:id="@+id/txtpassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginTop="6dp"
+                android:padding="8dp"
+                android:text="Forgot Password ?"
+                android:layout_height="wrap_content" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/log_me_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:padding="8dp"
+                android:text="SIGN IN"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
