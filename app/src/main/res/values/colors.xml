@@ -3,4 +3,11 @@
     <color name="colorPrimary">#42475B</color>
     <color name="colorPrimaryDark">#42475B</color>
     <color name="colorAccent">#42475B</color>
+
+    <color name="tabSelected">#787c87</color>
+    <color name="problems_new">#5d9cec</color>
+    <color name="problems_solved">#81c868</color>
+    <color name="problems_assigned">#7266ba</color>
+    <color name="problems_cancel">#f05050</color>
+
 </resources>

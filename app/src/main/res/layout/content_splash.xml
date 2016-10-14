@@ -9,10 +9,31 @@
     tools:context=".SplashActivity"
     tools:showIn="@layout/activity_splash">
 
+
+    <HorizontalScrollView
+        android:id="@+id/back_hori_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/sunset_city_streets" />
+
+        </RelativeLayout>
+    </HorizontalScrollView>
+
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_above="@+id/footer"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#65000000">
 
         <FrameLayout
             android:id="@+id/startter_frag_holder"
@@ -20,13 +41,5 @@
             android:layout_height="match_parent"></FrameLayout>
 
     </ScrollView>
-
-
-    <View
-        android:id="@+id/footer"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
 
 </RelativeLayout>

@@ -42,13 +42,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Saikat Pakira"
+                        android:textSize="16sp"
                         android:textColor="@android:color/white" />
 
                     <com.spm.taas.customview.TextViewIkarosLight
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="STUDENT"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textColor="@android:color/white" />
 
                 </LinearLayout>
