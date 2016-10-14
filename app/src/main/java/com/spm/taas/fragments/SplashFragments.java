@@ -71,25 +71,31 @@ public class SplashFragments extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            pBar.setVisibility(View.INVISIBLE);
-                            actionViewgroup.setVisibility(View.VISIBLE);
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pBar.setVisibility(View.INVISIBLE);
+                                actionViewgroup.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+
                 }
 
                 @Override
                 public void onError(final String message) {
                     Log.i("v", message);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            pBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
                 }
             });
             request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

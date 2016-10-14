@@ -17,7 +17,6 @@ public class TAASFragment extends Fragment {
     private AlertDialog alertDialog = null;
 
 
-
     public void showError(final String title, final String message) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(title)
@@ -30,7 +29,6 @@ public class TAASFragment extends Fragment {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
-
 
 
     public void showProgress() {
@@ -46,8 +44,15 @@ public class TAASFragment extends Fragment {
 
 
     public void hideProgress() {
-        alertDialog.hide();
+        alertDialog.dismiss();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+        }
+    }
 }

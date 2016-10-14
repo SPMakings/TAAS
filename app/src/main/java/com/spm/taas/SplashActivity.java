@@ -1,5 +1,6 @@
 package com.spm.taas;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 
+import com.spm.taas.application.TassApplication;
 import com.spm.taas.fragments.LoginFragment;
 import com.spm.taas.fragments.RegistrationFragment;
 import com.spm.taas.fragments.SplashFragments;
@@ -35,50 +37,55 @@ public class SplashActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().hide();
         //=====================================
-        openSplashPaqe();
-
-
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.parseColor("#2E0B05"));
         }
 
-        mainBg = (HorizontalScrollView) findViewById(R.id.back_hori_scroll);
+        if (TassApplication.getInstance().getUserID().equals("")) {
 
-        mainBgRunnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (movingForword) {
+            openSplashPaqe();
 
-                        //Log.i("ScrollTag", "" + mainBg.getMeasuredWidth());
+            mainBg = (HorizontalScrollView) findViewById(R.id.back_hori_scroll);
 
-                        if (mainBg.getMeasuredWidth() >= i) {
-                            i++;
-                            mainBg.smoothScrollTo(i, 0);
+            mainBgRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (movingForword) {
+
+                            //Log.i("ScrollTag", "" + mainBg.getMeasuredWidth());
+
+                            if (mainBg.getMeasuredWidth() >= i) {
+                                i++;
+                                mainBg.smoothScrollTo(i, 0);
+                            } else {
+                                movingForword = false;
+                                i = mainBg.getMeasuredWidth();
+                            }
                         } else {
-                            movingForword = false;
-                            i = mainBg.getMeasuredWidth();
+                            if (i > 0) {
+                                i--;
+                                mainBg.smoothScrollTo(i, 0);
+                            } else {
+                                movingForword = true;
+                                i = 0;
+                            }
                         }
-                    } else {
-                        if (i > 0) {
-                            i--;
-                            mainBg.smoothScrollTo(i, 0);
-                        } else {
-                            movingForword = true;
-                            i = 0;
-                        }
+                        handler.postDelayed(this, 100);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    handler.postDelayed(this, 100);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        };
+            };
 
-
+        } else {
+            Intent i = new Intent(SplashActivity.this, LandingActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 
     @Override

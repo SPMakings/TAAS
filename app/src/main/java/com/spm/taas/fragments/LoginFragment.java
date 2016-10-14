@@ -72,7 +72,7 @@ public class LoginFragment extends TAASFragment {
 
 
     private void logMeIn(final String email, final String password) {
-
+        showProgress();
         HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN + "login?email=" + email + "&password=" + password, new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {
@@ -83,11 +83,13 @@ public class LoginFragment extends TAASFragment {
                         TassApplication.getInstance().setUserData(mainObj.getString("email"),
                                 mainObj.getString("first_name") + " " + mainObj.getString("last_name"),
                                 mainObj.getString("user_type"),
-                                mainObj.getString("user_id"));
+                                mainObj.getString("user_id"),
+                                mainObj.getString("image"));
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                hideProgress();
                                 Intent i = new Intent(getActivity(), LandingActivity.class);
                                 startActivity(i);
                                 getActivity().finish();
@@ -98,6 +100,7 @@ public class LoginFragment extends TAASFragment {
                             @Override
                             public void run() {
                                 try {
+                                    hideProgress();
                                     showError("Login", "" + jObject.getString("message"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -115,6 +118,7 @@ public class LoginFragment extends TAASFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        hideProgress();
                         showError("Login", message);
                     }
                 });

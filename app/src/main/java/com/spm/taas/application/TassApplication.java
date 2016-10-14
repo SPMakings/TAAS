@@ -45,13 +45,14 @@ public class TassApplication extends Application {
     }
 
 
-    public void setUserData(final String userEmail, final String userName, final String userType, final String userID) {
+    public void setUserData(final String userEmail, final String userName, final String userType, final String userID,final String userImage) {
         initPreference();
         SharedPreferences.Editor edit = tassPreference.edit();
         edit.putString("user_id", userID);
         edit.putString("user_email", userEmail);
         edit.putString("user_name", userName);
         edit.putString("user_type", userType);
+        edit.putString("user_image", userImage);
         edit.commit();
     }
 
@@ -66,6 +67,21 @@ public class TassApplication extends Application {
     public String getUserID(){
         initPreference();
         return tassPreference.getString("user_id","");
+    }
+
+    public String getUserName(){
+        initPreference();
+        return tassPreference.getString("user_name","");
+    }
+
+    public String getUserImage(){
+        initPreference();
+        return tassPreference.getString("user_image","");
+    }
+
+    public String getUserType(){
+        initPreference();
+        return tassPreference.getString("user_type","");
     }
 
 

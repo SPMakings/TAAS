@@ -5,7 +5,6 @@
     android:animateLayoutChanges="true"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="@android:color/darker_gray"
     android:padding="16dp">
 
     <!--<ImageView-->
