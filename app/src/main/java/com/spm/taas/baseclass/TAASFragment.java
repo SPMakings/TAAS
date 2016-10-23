@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.spm.taas.R;
+import com.spm.taas.customview.TextViewIkarosRegular;
 
 /**
  * Created by saikatpakira on 12/10/16.
@@ -35,6 +36,18 @@ public class TAASFragment extends Fragment {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dilaog_loder, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setCancelable(false);
+        alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    public void showProgress(final String message) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dilaog_loder, null);
+        ((TextViewIkarosRegular) dialogView.findViewById(R.id.progress_text)).setText(message);
         dialogBuilder.setView(dialogView);
         dialogBuilder.setCancelable(false);
         alertDialog = dialogBuilder.create();

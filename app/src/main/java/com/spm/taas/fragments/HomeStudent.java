@@ -1,18 +1,16 @@
 package com.spm.taas.fragments;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
 import com.spm.taas.adapters.DashBoardAdapter;
 import com.spm.taas.application.TassApplication;
@@ -54,7 +52,14 @@ public class HomeStudent extends TAASFragment {
         mainLandingView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainLandingView.setItemAnimator(new DefaultItemAnimator());
 
-        getLandingData("show_all");
+
+        if (TassApplication.getInstance().getLandingList().size() == 0 || TassApplication.getInstance().isNeedToRefresh()) {
+            getLandingData("show_all");
+        } else {
+            loader.setVisibility(View.GONE);
+            mainLandingView.setAdapter(new DashBoardAdapter(getContext(), TassApplication.getInstance().getLandingList()));
+        }
+
 
     }
 
@@ -66,25 +71,30 @@ public class HomeStudent extends TAASFragment {
             public void onSuccess(final JSONObject jObject) {
                 try {
                     if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loader.setVisibility(View.GONE);
-                                try {
-                                    mainLandingView.setAdapter(new DashBoardAdapter(getContext(), initData(jObject.getJSONObject("data"))));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loader.setVisibility(View.GONE);
+                                    try {
+                                        mainLandingView.setAdapter(new DashBoardAdapter(getContext(), initData(jObject.getJSONObject("data"))));
+                                        TassApplication.getInstance().setNeedToRefresh(false);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     } else {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loader.setVisibility(View.GONE);
-                                showError("TAAS", "" + "Failed to fetch data.");
-                            }
-                        });
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loader.setVisibility(View.GONE);
+                                    showError("TAAS", "" + "Failed to fetch data.");
+                                }
+                            });
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -210,6 +220,7 @@ public class HomeStudent extends TAASFragment {
         temp_.setSubjectCount(mainObj_.getJSONObject("cancel_count").getString("Chemistry"));
         mainData_.add(temp_);
 
+        TassApplication.getInstance().setLandingList(mainData_);
 
         return mainData_;
     }

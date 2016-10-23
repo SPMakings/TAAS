@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <EditText
+        android:id="@+id/question_title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@android:color/transparent"
+        android:hint="Question Title"
+        android:inputType="textAutoComplete"
+        android:singleLine="true"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorAccent" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@android:color/transparent"
+        android:hint="Question Description"
+        android:inputType="textAutoComplete"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorAccent" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Subject" />
+
+    <Spinner
+        android:id="@+id/subject_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorAccent" />
+
+
+    <Button
+        android:id="@+id/upload_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="4dp"
+        android:text="Add Problem Picture"
+        android:textColor="@color/colorAccent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/scrollPreview"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/save_problems"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="4dp"
+        android:text="Post your problem"
+        android:textColor="@color/colorAccent" />
+
+</LinearLayout>

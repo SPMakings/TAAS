@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ public class RegistrationFragment extends TAASFragment {
     private ArrayList<String> categories = null;
     private ArrayList<String> categoriesExp = null;
     private EditText firstName, lastName, email, password, cofirtmPassword, phoneNumber, thirdFields;
-    private String SELECTED_COUNTRY = "", SELECTED_GRADE = "", SELECTED_EXPERT = "", USER_TYPE = "";
+    private String SELECTED_COUNTRY = "", SELECTED_DEGREE = "", SELECTED_EXPERT = "", USER_TYPE = "";
 
     @Nullable
     @Override
@@ -74,6 +75,8 @@ public class RegistrationFragment extends TAASFragment {
 
         phoneNumber = (EditText) view.findViewById(R.id.textPhone);
         thirdFields = (EditText) view.findViewById(R.id.thrd_fields);
+
+        USER_TYPE = "S";
         //============
 
 
@@ -108,7 +111,7 @@ public class RegistrationFragment extends TAASFragment {
         degreeList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                SELECTED_DEGREE = categories.get(position);
             }
 
             @Override
@@ -122,7 +125,7 @@ public class RegistrationFragment extends TAASFragment {
         expertiseList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                SELECTED_EXPERT = categoriesExp.get(position);
             }
 
             @Override
@@ -148,6 +151,7 @@ public class RegistrationFragment extends TAASFragment {
                 optionThree.setVisibility(View.GONE);
 
                 thirdFields.setHint("Grade");
+                thirdFields.setInputType(InputType.TYPE_CLASS_NUMBER);
 
             }
         });
@@ -168,6 +172,7 @@ public class RegistrationFragment extends TAASFragment {
                 optionThree.setVisibility(View.VISIBLE);
 
                 thirdFields.setHint("Profession");
+                thirdFields.setInputType(InputType.TYPE_CLASS_TEXT);
             }
         });
 
@@ -186,93 +191,121 @@ public class RegistrationFragment extends TAASFragment {
 
 
                                                 if (USER_TYPE.equals("S")) {
+                                                    Log.i("rdfield", thirdFields.getText().toString().trim());
+                                                    if (thirdFields.getText().toString().trim().length() > 0) {
+                                                        if (Integer.parseInt(thirdFields.getText().toString().trim()) > 0
+                                                                && Integer.parseInt(thirdFields.getText().toString().trim()) < 9) {
 
-                                                    LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
-                                                    KeyValuePairModel temp_ = new KeyValuePairModel();
-                                                    temp_.add("firstname", firstName.getText().toString().trim());
-                                                    param_.add(temp_);
+                                                            LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
+                                                            KeyValuePairModel temp_ = new KeyValuePairModel();
+                                                            temp_.add("firstname", firstName.getText().toString().trim());
+                                                            param_.add(temp_);
 
-                                                    temp_ = new KeyValuePairModel();
-                                                    temp_.add("lastname", lastName.getText().toString().trim());
-                                                    param_.add(temp_);
-
-
-                                                    temp_ = new KeyValuePairModel();
-                                                    temp_.add("email", email.getText().toString().trim());
-                                                    param_.add(temp_);
-
-
-                                                    temp_ = new KeyValuePairModel();
-                                                    temp_.add("password", password.getText().toString().trim());
-                                                    param_.add(temp_);
+                                                            temp_ = new KeyValuePairModel();
+                                                            temp_.add("lastname", lastName.getText().toString().trim());
+                                                            param_.add(temp_);
 
 
-                                                    temp_ = new KeyValuePairModel();
-                                                    temp_.add("country", SELECTED_COUNTRY);
-                                                    param_.add(temp_);
+                                                            temp_ = new KeyValuePairModel();
+                                                            temp_.add("email", email.getText().toString().trim());
+                                                            param_.add(temp_);
 
 
-                                                    temp_ = new KeyValuePairModel();
-                                                    temp_.add("phone", phoneNumber.getText().toString().trim());
-                                                    param_.add(temp_);
+                                                            temp_ = new KeyValuePairModel();
+                                                            temp_.add("password", password.getText().toString().trim());
+                                                            param_.add(temp_);
 
 
-                                                    temp_ = new KeyValuePairModel();
-                                                    temp_.add("grade", thirdFields.getText().toString().trim());
-                                                    param_.add(temp_);
+                                                            temp_ = new KeyValuePairModel();
+                                                            temp_.add("country", SELECTED_COUNTRY);
+                                                            param_.add(temp_);
 
 
-                                                    temp_ = new KeyValuePairModel();
-                                                    temp_.add("user_type", USER_TYPE);
-                                                    param_.add(temp_);
-                                                    regesterMe(param_);
+                                                            temp_ = new KeyValuePairModel();
+                                                            temp_.add("phone", phoneNumber.getText().toString().trim());
+                                                            param_.add(temp_);
 
+
+                                                            temp_ = new KeyValuePairModel();
+                                                            temp_.add("grade", thirdFields.getText().toString().trim());
+                                                            param_.add(temp_);
+
+
+                                                            temp_ = new KeyValuePairModel();
+                                                            temp_.add("user_type", USER_TYPE);
+                                                            param_.add(temp_);
+
+
+                                                            Log.i("registration", "Going to register...");
+
+                                                            regesterMe(param_);
+
+                                                        } else {
+                                                            thirdFields.setError("Grade must be 1 to 8");
+                                                        }
+                                                    } else {
+                                                        thirdFields.setError("Enter Grade, must be 1 to 8");
+                                                    }
                                                 } else {
+                                                    if (thirdFields.getText().toString().trim().length() > 0) {
+
+                                                        LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
+                                                        KeyValuePairModel temp_ = new KeyValuePairModel();
+                                                        temp_.add("firstname", firstName.getText().toString().trim());
+                                                        param_.add(temp_);
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("lastname", lastName.getText().toString().trim());
+                                                        param_.add(temp_);
 
 
-//                                                    LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
-//                                                    KeyValuePairModel temp_ = new KeyValuePairModel();
-//                                                    temp_.add("firstname", firstName.getText().toString().trim());
-//                                                    param_.add(temp_);
-//
-//                                                    temp_ = new KeyValuePairModel();
-//                                                    temp_.add("lastname", lastName.getText().toString().trim());
-//                                                    param_.add(temp_);
-//
-//
-//                                                    temp_ = new KeyValuePairModel();
-//                                                    temp_.add("email", email.getText().toString().trim());
-//                                                    param_.add(temp_);
-//
-//
-//                                                    temp_ = new KeyValuePairModel();
-//                                                    temp_.add("password", password.getText().toString().trim());
-//                                                    param_.add(temp_);
-//
-//
-//                                                    temp_ = new KeyValuePairModel();
-//                                                    temp_.add("country", SELECTED_COUNTRY);
-//                                                    param_.add(temp_);
-//
-//
-//                                                    temp_ = new KeyValuePairModel();
-//                                                    temp_.add("phone", phoneNumber.getText().toString().trim());
-//                                                    param_.add(temp_);
-//
-//
-//                                                    temp_ = new KeyValuePairModel();
-//                                                    temp_.add("grade", thirdFields.getText().toString().trim());
-//                                                    param_.add(temp_);
-//
-//
-//                                                    temp_ = new KeyValuePairModel();
-//                                                    temp_.add("user_type", USER_TYPE);
-//                                                    param_.add(temp_);
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("email", email.getText().toString().trim());
+                                                        param_.add(temp_);
 
 
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("password", password.getText().toString().trim());
+                                                        param_.add(temp_);
+
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("country", SELECTED_COUNTRY);
+                                                        param_.add(temp_);
+
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("phone", phoneNumber.getText().toString().trim());
+                                                        param_.add(temp_);
+
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("profession", thirdFields.getText().toString().trim());
+                                                        param_.add(temp_);
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("grade", "");
+                                                        param_.add(temp_);
+
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("user_type", USER_TYPE);
+                                                        param_.add(temp_);
+
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("degree", SELECTED_DEGREE);
+                                                        param_.add(temp_);
+
+                                                        temp_ = new KeyValuePairModel();
+                                                        temp_.add("expertise", SELECTED_EXPERT);
+                                                        param_.add(temp_);
+
+                                                        regesterMe(param_);
+                                                    } else {
+                                                        thirdFields.setError("Enter your profession.");
+                                                    }
                                                 }
-
-
                                             } else {
                                                 cofirtmPassword.setError("Password and Confirm password is not matching.");
                                             }
@@ -310,6 +343,7 @@ public class RegistrationFragment extends TAASFragment {
         categories.add("Master of Science (MS)");
         categories.add("Ph.D");
         categories.add("Engineering");
+        SELECTED_DEGREE = "High School (HS)";
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return dataAdapter;
@@ -325,6 +359,7 @@ public class RegistrationFragment extends TAASFragment {
         categoriesExp.add("Math+Chem");
         categoriesExp.add("Phy+Chem");
         categoriesExp.add("Phy+Chem+Math");
+        SELECTED_EXPERT = "Physics";
         ArrayAdapter<String> dataAdapterExper = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categoriesExp);
         dataAdapterExper.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return dataAdapterExper;
@@ -333,7 +368,7 @@ public class RegistrationFragment extends TAASFragment {
 
     private void regesterMe(final LinkedList<KeyValuePairModel> param_) {
         showProgress();
-        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN + "", param_, new onHttpResponseListener() {
+        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN + "register", param_, new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -341,6 +376,24 @@ public class RegistrationFragment extends TAASFragment {
                     public void run() {
                         Log.i("registration", jObject.toString());
                         hideProgress();
+                        //{"status":"SUCCESS","message":"Verification Pending."}
+                        try {
+                            if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
+                                showError("Registration", "Registration successful. Now TAAS will verify your provided info as soon" +
+                                        " as possible. Please wait until verification.");
+                                firstName.setText("");
+                                lastName.setText("");
+                                email.setText("");
+                                phoneNumber.setText("");
+                                password.setText("");
+                                cofirtmPassword.setText("");
+                                thirdFields.setText("");
+                            } else {
+                                showError("Registration", jObject.getString("message"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
@@ -351,7 +404,7 @@ public class RegistrationFragment extends TAASFragment {
                     @Override
                     public void run() {
                         hideProgress();
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        showError("Registration", message);
                     }
                 });
             }

@@ -21,11 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
         android:weightSum="3">
 
 
         <LinearLayout
+            android:id="@+id/landing_home"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -49,10 +49,12 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/landing_uploads"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
             <ImageView
@@ -71,9 +73,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/landing_listview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:orientation="horizontal">
 

@@ -3,7 +3,11 @@ package com.spm.taas.application;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.spm.taas.models.DashBoardModel;
+
 import org.json.JSONArray;
+
+import java.util.LinkedList;
 
 /**
  * Created by saikatpakira on 11/10/16.
@@ -15,13 +19,25 @@ public class TassApplication extends Application {
 
     private SharedPreferences tassPreference = null;
     private JSONArray countryList = null;
+    private boolean needToRefresh = false;
+
+    private LinkedList<DashBoardModel> landingList = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        landingList = new LinkedList<DashBoardModel>();
     }
 
+
+    public LinkedList<DashBoardModel> getLandingList() {
+        return landingList;
+    }
+
+    public void setLandingList(LinkedList<DashBoardModel> landingList) {
+        this.landingList = landingList;
+    }
 
     public static synchronized TassApplication getInstance() {
         return mInstance;
@@ -38,6 +54,14 @@ public class TassApplication extends Application {
     }
 
 
+    public boolean isNeedToRefresh() {
+        return needToRefresh;
+    }
+
+    public void setNeedToRefresh(boolean needToRefresh) {
+        this.needToRefresh = needToRefresh;
+    }
+
     private void initPreference() {
         if (tassPreference == null) {
             tassPreference = getSharedPreferences("SPM_TASS", MODE_PRIVATE);
@@ -45,7 +69,7 @@ public class TassApplication extends Application {
     }
 
 
-    public void setUserData(final String userEmail, final String userName, final String userType, final String userID,final String userImage) {
+    public void setUserData(final String userEmail, final String userName, final String userType, final String userID, final String userImage) {
         initPreference();
         SharedPreferences.Editor edit = tassPreference.edit();
         edit.putString("user_id", userID);
@@ -64,24 +88,24 @@ public class TassApplication extends Application {
     }
 
 
-    public String getUserID(){
+    public String getUserID() {
         initPreference();
-        return tassPreference.getString("user_id","");
+        return tassPreference.getString("user_id", "");
     }
 
-    public String getUserName(){
+    public String getUserName() {
         initPreference();
-        return tassPreference.getString("user_name","");
+        return tassPreference.getString("user_name", "");
     }
 
-    public String getUserImage(){
+    public String getUserImage() {
         initPreference();
-        return tassPreference.getString("user_image","");
+        return tassPreference.getString("user_image", "");
     }
 
-    public String getUserType(){
+    public String getUserType() {
         initPreference();
-        return tassPreference.getString("user_type","");
+        return tassPreference.getString("user_type", "");
     }
 
 

@@ -1,6 +1,7 @@
 package com.spm.taas.networkmanagement;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,7 @@ import okhttp3.Response;
 
 public class HttpPostRequest extends AsyncTask<Void, Void, Void> {
 
-    private String URL = "", exception = "";
+    private String URL = "", exception = "", respose_ = "";
     private JSONObject result = null;
     private onHttpResponseListener callback = null;
     private LinkedList<KeyValuePairModel> keyValue = null;
@@ -45,16 +46,18 @@ public class HttpPostRequest extends AsyncTask<Void, Void, Void> {
                 .post(requestBilder.build())
                 .addHeader("cache-control", "no-cache")
                 .build();
-
+        Response response = null;
         try {
-            Response response = client.newCall(request).execute();
-            result = new JSONObject(response.body().string());
+            response = client.newCall(request).execute();
+            respose_ = response.body().string();
+            Log.i("response", respose_);
+            result = new JSONObject(respose_);
         } catch (IOException e) {
             e.printStackTrace();
             exception = e.toString();
         } catch (JSONException e) {
             e.printStackTrace();
-            exception = e.toString();
+            exception = respose_;
         }
 
         return null;
