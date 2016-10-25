@@ -35,6 +35,7 @@ import com.spm.taas.application.TassApplication;
 import com.spm.taas.customview.TextViewIkarosLight;
 import com.spm.taas.customview.TextViewIkarosRegular;
 import com.spm.taas.fragments.HomeStudent;
+import com.spm.taas.fragments.ProblemSolution;
 import com.spm.taas.fragments.ProblemsUpload;
 import com.spm.taas.fragments.SplashFragments;
 
@@ -90,12 +91,14 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
+                footer_upload.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.tabSelected));
+                footer_home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+
                 if (TassApplication.getInstance().getUserType().equalsIgnoreCase("student")) {
-                    footer_upload.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.tabSelected));
-                    footer_home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
                     openProblemUploadStudent();
                 } else {
-                    Toast.makeText(LandingActivity.this, "Working on...", Toast.LENGTH_SHORT).show();
+                    openSolutionUploadStudent();
                 }
             }
         });
@@ -104,7 +107,7 @@ public class LandingActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
+                Toast.makeText(LandingActivity.this, "Working on...", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -122,6 +125,13 @@ public class LandingActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.landing_fragment_bucket, new ProblemsUpload());
+        fragmentTransaction.commit();
+    }
+
+    private void openSolutionUploadStudent() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.landing_fragment_bucket, new ProblemSolution());
         fragmentTransaction.commit();
     }
 
