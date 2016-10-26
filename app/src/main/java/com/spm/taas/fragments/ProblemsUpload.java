@@ -247,7 +247,7 @@ public class ProblemsUpload extends TAASFragment {
                                     pAdapter.getCUrrentArray().clear();
                                     pAdapter.notifyDataSetChanged();
                                     previewHolder.setVisibility(View.GONE);
-                                    TassApplication.getInstance().setNeedToRefresh(false);
+                                    TassApplication.getInstance().setNeedToRefresh(true);
                                     Toast.makeText(getActivity(), "Problem posted successfully.", Toast.LENGTH_SHORT).show();
                                 }
 

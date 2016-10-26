@@ -70,6 +70,8 @@ public class HomeStudent extends TAASFragment {
             @Override
             public void onSuccess(final JSONObject jObject) {
                 try {
+                    Log.i("dhoppp", TassConstants.URL_DOMAIN_APP_CONTROLLER + "dashboard?user_id=" + TassApplication.getInstance().getUserID() + "&filter=" + filter_);
+                    Log.i("dhoppp", jObject.toString());
                     if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(new Runnable() {

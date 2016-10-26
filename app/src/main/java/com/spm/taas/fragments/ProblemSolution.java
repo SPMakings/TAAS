@@ -21,10 +21,12 @@ import android.widget.Toast;
 import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
 import com.spm.taas.adapters.ProblemPreviewAdapter;
+import com.spm.taas.adapters.QuestionSpinnerAdapter;
 import com.spm.taas.application.OnImageFetched;
 import com.spm.taas.application.TassApplication;
 import com.spm.taas.application.TassConstants;
 import com.spm.taas.baseclass.TAASFragment;
+import com.spm.taas.networkmanagement.HttpGetRequest;
 import com.spm.taas.networkmanagement.HttpPostRequest;
 import com.spm.taas.networkmanagement.KeyValuePairModel;
 import com.spm.taas.networkmanagement.OkHttpFileUploadRequest;
@@ -35,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * Created by saikatpakira on 25/10/16.
@@ -45,9 +48,9 @@ public class ProblemSolution extends TAASFragment {
 
     private RecyclerView previewHolder = null;
     private ProblemPreviewAdapter pAdapter = null;
-    private ArrayList<String> subjects = null;
-    private String SELECTED_STATUS = "",SELECTED_QUESTION_ID = "";
-    private Spinner questionList = null, statusList = null;
+    private ArrayList<String> stateArray = null, subjectsArray = null;
+    private String SELECTED_STATUS = "", SELECTED_QUESTION_ID = "", SELECTED_SUBJECT = "";
+    private Spinner questionList = null, statusList = null, subjectList = null;
     private EditText sunjectTitle;
     private LinkedList<String> selectedImages = null;
 
@@ -62,8 +65,9 @@ public class ProblemSolution extends TAASFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        questionList = (Spinner) view.findViewById(R.id.subject_list);
+        questionList = (Spinner) view.findViewById(R.id.question_list);
         statusList = (Spinner) view.findViewById(R.id.status_list);
+        subjectList = (Spinner) view.findViewById(R.id.subject_list);
 
         sunjectTitle = (EditText) view.findViewById(R.id.question_title);
 
@@ -79,7 +83,21 @@ public class ProblemSolution extends TAASFragment {
         statusList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SELECTED_STATUS = subjects.get(position).toLowerCase();
+                SELECTED_STATUS = stateArray.get(position).toLowerCase();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        subjectList.setAdapter(initSubjectAdapter());
+        subjectList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SELECTED_SUBJECT = subjectsArray.get(position).toLowerCase();
+                getQuestionList(SELECTED_SUBJECT);
             }
 
             @Override
@@ -148,53 +166,54 @@ public class ProblemSolution extends TAASFragment {
 
                 if (sunjectTitle.getText().toString().trim().length() > 0) {
                     if (pAdapter.getCUrrentArray().size() > 0) {
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle("Posting Problem")
-                                .setMessage("Do you want to post this solution?")
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
+                        if (!SELECTED_QUESTION_ID.equalsIgnoreCase("")) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("Posting Problem")
+                                    .setMessage("Do you want to post this solution?")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
 
 
-                                        LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
-                                        KeyValuePairModel temp_ = new KeyValuePairModel();
-                                        temp_.add("reply", sunjectTitle.getText().toString().trim());
-                                        param_.add(temp_);
+                                            LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
+                                            KeyValuePairModel temp_ = new KeyValuePairModel();
+                                            temp_.add("reply", sunjectTitle.getText().toString().trim());
+                                            param_.add(temp_);
 
 
-                                        temp_ = new KeyValuePairModel();
-                                        temp_.add("status", SELECTED_STATUS);
-                                        param_.add(temp_);
+                                            temp_ = new KeyValuePairModel();
+                                            temp_.add("status", SELECTED_STATUS);
+                                            param_.add(temp_);
 
-                                        Log.i("response", TassApplication.getInstance().getUserID());
+                                            Log.i("response", TassApplication.getInstance().getUserID());
 
-                                        temp_ = new KeyValuePairModel();
-                                        temp_.add("teacher", TassApplication.getInstance().getUserID());
-                                        param_.add(temp_);
+                                            temp_ = new KeyValuePairModel();
+                                            temp_.add("teacher", TassApplication.getInstance().getUserID());
+                                            param_.add(temp_);
 
-                                        temp_ = new KeyValuePairModel();
-                                        temp_.add("question_id", SELECTED_QUESTION_ID);
-                                        param_.add(temp_);
+                                            temp_ = new KeyValuePairModel();
+                                            temp_.add("question_id", SELECTED_QUESTION_ID);
+                                            param_.add(temp_);
 
-                                        selectedImages = pAdapter.getCUrrentArray();
-                                        //====API Fire.
-                                        postMyProblem(param_);
+                                            selectedImages = pAdapter.getCUrrentArray();
+                                            //====API Fire.
+                                            postMySoln(param_);
 
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .show();
-
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            showError("Question Status", "There is no assigned question of selected subjec for you to post solution.");
+                        }
                     } else {
                         showError("Problem", "You have to post at least 1 image(Max 3) of your problem.");
                     }
-
-
                 } else {
-                    sunjectTitle.setError("Enter subject title.");
+                    sunjectTitle.setError("Enter your reply to student.");
                 }
             }
         });
@@ -202,16 +221,27 @@ public class ProblemSolution extends TAASFragment {
 
 
     private ArrayAdapter<String> initStatusListAdapter() {
-        subjects = new ArrayList<String>();
-        subjects.add("Solved");
-        subjects.add("Cancelled");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, subjects);
+        stateArray = new ArrayList<String>();
+        stateArray.add("Solved");
+        stateArray.add("Cancelled");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stateArray);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         SELECTED_STATUS = "solved";
         return dataAdapter;
     }
 
-    private void postMyProblems(final LinkedList<KeyValuePairModel> data_, final String fileUploadTag_) {
+    private ArrayAdapter<String> initSubjectAdapter() {
+        subjectsArray = new ArrayList<String>();
+        subjectsArray.add("Physics");
+        subjectsArray.add("Chemistry");
+        subjectsArray.add("Mathematics");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, subjectsArray);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SELECTED_STATUS = "physics";
+        return dataAdapter;
+    }
+
+    private void postSolnFile(final LinkedList<KeyValuePairModel> data_, final String fileUploadTag_) {
 
         OkHttpFileUploadRequest request = new OkHttpFileUploadRequest(data_,
                 fileUploadTag_, selectedImages.get(0),
@@ -230,15 +260,16 @@ public class ProblemSolution extends TAASFragment {
                                 if (selectedImages.size() > 0) {
                                     hideProgress();
                                     showProgress("Uploading files " + (selectedImages.size() + 1));
-                                    postMyProblems(data_, "userfile");
+                                    postSolnFile(data_, "userfile");
                                 } else {
                                     hideProgress();
                                     sunjectTitle.setText("");
                                     pAdapter.getCUrrentArray().clear();
                                     pAdapter.notifyDataSetChanged();
                                     previewHolder.setVisibility(View.GONE);
-                                    TassApplication.getInstance().setNeedToRefresh(false);
+                                    TassApplication.getInstance().setNeedToRefresh(true);
                                     Toast.makeText(getActivity(), "Problem posted successfully.", Toast.LENGTH_SHORT).show();
+                                    getQuestionList(SELECTED_SUBJECT);
                                 }
 
                             } else {
@@ -265,7 +296,7 @@ public class ProblemSolution extends TAASFragment {
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void postMyProblem(final LinkedList<KeyValuePairModel> data_) {
+    private void postMySoln(final LinkedList<KeyValuePairModel> data_) {
         showProgress();
         HttpPostRequest rewuest_ = new HttpPostRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER + "reply_student",
                 data_, new onHttpResponseListener() {
@@ -283,8 +314,8 @@ public class ProblemSolution extends TAASFragment {
                                 KeyValuePairModel temp_ = new KeyValuePairModel();
                                 temp_.add("reply_id", jObject.getString("reply_id"));
                                 param_.add(temp_);
-
-                                postMyProblems(data_, "userfile");
+                                TassApplication.getInstance().setNeedToRefresh(true);
+                                postSolnFile(data_, "userfile");
 
                             } else {
                                 hideProgress();
@@ -312,6 +343,69 @@ public class ProblemSolution extends TAASFragment {
             }
         });
         rewuest_.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getQuestionList(final String subject_) {
+        showProgress();
+        HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                "get_email_list?user_id=" +
+                TassApplication.getInstance().getUserID() +
+                "&subject=" + subject_,
+                new onHttpResponseListener() {
+                    @Override
+                    public void onSuccess(final JSONObject jObject) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideProgress();
+//                                Log.i("dhoperchop", TassConstants.URL_DOMAIN_APP_CONTROLLER +
+//                                        "get_email_list?user_id=" +
+//                                        TassApplication.getInstance().getUserID() +
+//                                        "&subject=" + subject_);
+//                                Log.i("dhoperchop", jObject.toString());
+                                try {
+                                    if (jObject.getJSONArray("data").length() > 0) {
+                                        questionList.setAdapter(new QuestionSpinnerAdapter(getActivity(), jObject.getJSONArray("data")));
+                                        questionList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                            @Override
+                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                try {
+                                                    SELECTED_QUESTION_ID = jObject.getJSONArray("data").getJSONObject(position).getString("question_id").toLowerCase();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onNothingSelected(AdapterView<?> parent) {
+
+                                            }
+                                        });
+                                    } else {
+                                        showError("Question Status", "There is no assigned question of " + subject_.toUpperCase() + " for you to post solution. Please select another subject for questions.");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    showError("Error", e.toString());
+                                    SELECTED_QUESTION_ID = "";
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(final String message) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideProgress();
+                                showError("Error", message);
+                                SELECTED_QUESTION_ID = "";
+                            }
+                        });
+                    }
+                });
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
