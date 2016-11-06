@@ -51,7 +51,8 @@ public class LoginFragment extends TAASFragment {
             @Override
             public void onClick(View v) {
 
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailText.getText().toString().trim()).matches()) {
+                //if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailText.getText().toString().trim()).matches()) {
+                if (emailText.getText().toString().trim().length() > 0) {
                     if (passwordText.getText().toString().trim().length() > 0) {
                         try {
                             logMeIn(URLEncoder.encode(emailText.getText().toString().trim(), "UTF-8"),

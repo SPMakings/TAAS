@@ -4,15 +4,9 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,19 +28,20 @@ import com.spm.taas.application.RealPathHelper;
 import com.spm.taas.application.TassApplication;
 import com.spm.taas.customview.TextViewIkarosLight;
 import com.spm.taas.customview.TextViewIkarosRegular;
+import com.spm.taas.fragments.AdminUserList;
 import com.spm.taas.fragments.HomeStudent;
 import com.spm.taas.fragments.ProblemSolution;
 import com.spm.taas.fragments.ProblemsUpload;
-import com.spm.taas.fragments.SplashFragments;
+import com.spm.taas.fragments.StatusFragment;
 
 public class LandingActivity extends AppCompatActivity {
 
     private ImageView header_prof_img = null;
     private TextViewIkarosRegular header_prof_name = null;
-    private TextViewIkarosLight header_prof_type = null;
+    private TextViewIkarosLight header_prof_type = null, uploadText = null;
     private final int STORAGE_PERMISSION_CODE = 1, PICK_IMAGE = 100;
     private OnImageFetched imageCallback = null;
-    private View footer_home, footer_upload;
+    private View footer_home, footer_upload, footer_subjects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,34 +54,44 @@ public class LandingActivity extends AppCompatActivity {
         header_prof_img = (ImageView) findViewById(R.id.header_prof_image);
         header_prof_name = (TextViewIkarosRegular) findViewById(R.id.header_profile_name);
         header_prof_type = (TextViewIkarosLight) findViewById(R.id.header_profile_type);
+        uploadText = (TextViewIkarosLight) findViewById(R.id.upload_text);
+
+        if (TassApplication.getInstance().getUserType().equalsIgnoreCase("admin")) {
+            ((TextViewIkarosLight) findViewById(R.id.upload_text)).setText("USERS");
+            ((ImageView) findViewById(R.id.upload_icon)).setBackgroundResource(R.drawable.ic_action_users);
+        }
 
         header_prof_name.setText(TassApplication.getInstance().getUserName());
         header_prof_type.setText(TassApplication.getInstance().getUserType());
 
         footer_home = findViewById(R.id.landing_home);
         footer_upload = findViewById(R.id.landing_uploads);
+        footer_subjects = findViewById(R.id.landing_listview);
 
         Glide.with(this)
                 .load(TassApplication.getInstance().getUserImage())
                 .centerCrop()
+                .placeholder(R.drawable.default_place_holder)
+                .error(R.drawable.default_place_holder)
                 .crossFade().bitmapTransform(new CircleTransform(this))
                 .into(header_prof_img);
 
 
         openSplashPaqe();
 
-        findViewById(R.id.landing_home).setOnClickListener(new View.OnClickListener() {
+        footer_home.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 footer_home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.tabSelected));
                 footer_upload.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                footer_subjects.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
                 openSplashPaqe();
             }
         });
 
-        findViewById(R.id.landing_uploads).setOnClickListener(new View.OnClickListener() {
+        footer_upload.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -94,20 +99,41 @@ public class LandingActivity extends AppCompatActivity {
 
                 footer_upload.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.tabSelected));
                 footer_home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                footer_subjects.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 
-                if (TassApplication.getInstance().getUserType().equalsIgnoreCase("student")) {
+
+                if (TassApplication.getInstance().getUserType().equalsIgnoreCase("admin")) {
+                    openAdminUserList();
+                } else if (TassApplication.getInstance().getUserType().equalsIgnoreCase("student")) {
                     openProblemUploadStudent();
                 } else {
                     openSolutionUploadStudent();
                 }
+
+
             }
         });
 
-        findViewById(R.id.landing_listview).setOnClickListener(new View.OnClickListener() {
+        footer_subjects.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(LandingActivity.this, "Working on...", Toast.LENGTH_SHORT).show();
+
+
+                footer_upload.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                footer_home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                footer_subjects.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.tabSelected));
+
+
+                openListView();
+
+//                if (TassApplication.getInstance().getUserType().equalsIgnoreCase("student")) {
+//
+//                } else {
+//                    Toast.makeText(LandingActivity.this, "Working on...", Toast.LENGTH_SHORT).show();
+//                }
+
+
             }
         });
     }
@@ -128,10 +154,24 @@ public class LandingActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    private void openAdminUserList() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.landing_fragment_bucket, new AdminUserList());
+        fragmentTransaction.commit();
+    }
+
     private void openSolutionUploadStudent() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.landing_fragment_bucket, new ProblemSolution());
+        fragmentTransaction.commit();
+    }
+
+    private void openListView() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.landing_fragment_bucket, new StatusFragment());
         fragmentTransaction.commit();
     }
 

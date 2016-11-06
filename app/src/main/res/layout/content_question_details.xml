@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_question_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.spm.taas.QuestionDetails"
+    tools:showIn="@layout/activity_question_details">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="4dp"
+        card_view:contentPadding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Question Details"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/darker_gray" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/qun_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Loading..."
+                android:textColor="@color/colorAccent" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/qun_ttl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Title: "
+                android:textColor="@color/colorAccent" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/qun_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details"
+                android:textColor="@color/colorAccent" />
+
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:id="@+id/qun_posted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loading..." />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/qun_attach"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Attachments (0)"
+                android:textColor="@color/colorAccent" />
+
+
+            <HorizontalScrollView
+                android:id="@+id/prob_atch_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none"
+                android:visibility="gone">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:orientation="horizontal">
+
+                    <com.spm.taas.customview.TextViewIkarosRegular
+                        android:id="@+id/qun_attch_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corner_mold_accent"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="4dp"
+                        android:text="Problem File 1"
+                        android:textColor="@android:color/white" />
+
+                    <com.spm.taas.customview.TextViewIkarosRegular
+                        android:id="@+id/qun_attch_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:background="@drawable/corner_mold_accent"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="4dp"
+                        android:text="Problem File 1"
+                        android:textColor="@android:color/white" />
+
+                    <com.spm.taas.customview.TextViewIkarosRegular
+                        android:id="@+id/qun_attch_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:background="@drawable/corner_mold_accent"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="4dp"
+                        android:text="Problem File 1"
+                        android:textColor="@android:color/white" />
+
+                    <com.spm.taas.customview.TextViewIkarosRegular
+                        android:id="@+id/qun_attch_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:background="@drawable/corner_mold_accent"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="4dp"
+                        android:text="Problem File 1"
+                        android:textColor="@android:color/white" />
+
+                    <com.spm.taas.customview.TextViewIkarosRegular
+                        android:id="@+id/qun_attch_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:background="@drawable/corner_mold_accent"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="4dp"
+                        android:text="Problem File 1"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        card_view:cardCornerRadius="4dp"
+        card_view:contentPadding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Answer Details"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/darker_gray" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/ans_assigned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Loading..."
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/ans_solved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Loading..."
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/payment_red_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="You have to pay $1.00 to get this solution."
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:id="@+id/make_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/rounded_corner_red"
+                android:paddingBottom="6dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="6dp"
+                android:text="Make Payment $1"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <LinearLayout
+        android:id="@+id/assig_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_corner_green"
+        android:gravity="center"
+        android:paddingBottom="4dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="4dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_assign" />
+
+        <com.spm.taas.customview.TextViewIkarosRegular
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="Assign"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

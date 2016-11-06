@@ -66,6 +66,7 @@ public class HomeStudent extends TAASFragment {
 
     private void getLandingData(final String filter_) {
         loader.setVisibility(View.VISIBLE);
+        Log.i("dhoppp", TassConstants.URL_DOMAIN_APP_CONTROLLER + "dashboard?user_id=" + TassApplication.getInstance().getUserID() + "&filter=" + filter_);
         HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER + "dashboard?user_id=" + TassApplication.getInstance().getUserID() + "&filter=" + filter_, new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {

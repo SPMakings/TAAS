@@ -9,6 +9,9 @@ import org.json.JSONArray;
 
 import java.util.LinkedList;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 /**
  * Created by saikatpakira on 11/10/16.
  */
@@ -21,6 +24,9 @@ public class TassApplication extends Application {
     private JSONArray countryList = null;
     private boolean needToRefresh = false;
 
+    private static Retrofit retrofit = null;
+
+
     private LinkedList<DashBoardModel> landingList = null;
 
     @Override
@@ -28,6 +34,17 @@ public class TassApplication extends Application {
         super.onCreate();
         mInstance = this;
         landingList = new LinkedList<DashBoardModel>();
+    }
+
+
+    public static synchronized Retrofit getClient() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(TassConstants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit;
     }
 
 
