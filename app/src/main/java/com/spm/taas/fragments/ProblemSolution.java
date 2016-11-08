@@ -245,7 +245,7 @@ public class ProblemSolution extends TAASFragment {
 
         OkHttpFileUploadRequest request = new OkHttpFileUploadRequest(data_,
                 fileUploadTag_, selectedImages.get(0),
-                TassConstants.URL_DOMAIN_APP_CONTROLLER + "reply_student", new onHttpResponseListener() {
+                TassConstants.URL_DOMAIN_APP_CONTROLLER + "reply_image_upload", new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -315,7 +315,7 @@ public class ProblemSolution extends TAASFragment {
                                 temp_.add("reply_id", jObject.getString("reply_id"));
                                 param_.add(temp_);
                                 TassApplication.getInstance().setNeedToRefresh(true);
-                                postSolnFile(data_, "userfile");
+                                postSolnFile(param_, "userfile");
 
                             } else {
                                 hideProgress();

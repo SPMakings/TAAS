@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cloudinary.Cloudinary;
 import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
 import com.spm.taas.adapters.ProblemPreviewAdapter;
@@ -41,8 +42,15 @@ import com.spm.taas.networkmanagement.onHttpResponseListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by saikatpakira on 23/10/16.
@@ -203,6 +211,8 @@ public class ProblemsUpload extends TAASFragment {
                 } else {
                     sunjectTitle.setError("Enter subject title.");
                 }
+//                selectedImages = pAdapter.getCUrrentArray();
+//                (new UploadImage()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
 
@@ -224,7 +234,7 @@ public class ProblemsUpload extends TAASFragment {
 
         OkHttpFileUploadRequest request = new OkHttpFileUploadRequest(data_,
                 fileUploadTag_, selectedImages.get(0),
-                TassConstants.URL_DOMAIN_APP_CONTROLLER + "student_question_upload", new onHttpResponseListener() {
+                TassConstants.URL_DOMAIN_APP_CONTROLLER + "question_image_upload", new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -293,8 +303,8 @@ public class ProblemsUpload extends TAASFragment {
                                 KeyValuePairModel temp_ = new KeyValuePairModel();
                                 temp_.add("question_id", jObject.getString("question_id"));
                                 param_.add(temp_);
-
-                                postMyProblems(data_, "userfile");
+                                Log.i("response", jObject.getString("question_id"));
+                                postMyProblems(param_, "userfile");
 
                             } else {
                                 hideProgress();
@@ -322,6 +332,43 @@ public class ProblemsUpload extends TAASFragment {
             }
         });
         rewuest_.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    //===========Cloudinayr Upload.
+
+
+    private class UploadImage extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            //selectedImages.get(0)
+
+            File file = new File(selectedImages.get(0));
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+
+                Map config = new HashMap();
+                config.put("public_id", "abdbasdasda76asd7sa789");
+                config.put("signature", "cOKO0XAc8VNEMhU6xoGZzNcGaXA");
+                config.put("timestamp", "1346925631");
+                config.put("api_key", "124414451557244");
+                Map config2 = new HashMap();
+                config.put("cloud_name", "spmakings");
+//                Cloudinary  cloudinary = new Cloudinary(config2);
+                Cloudinary cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
+
+                JSONObject resultObj_ = cloudinary.uploader().upload(fileInputStream, new HashMap());
+                Log.i("cloudinator", resultObj_.toString());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
     }
 
 

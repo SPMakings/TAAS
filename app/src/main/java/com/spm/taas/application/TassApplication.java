@@ -3,11 +3,14 @@ package com.spm.taas.application;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.cloudinary.Cloudinary;
 import com.spm.taas.models.DashBoardModel;
 
 import org.json.JSONArray;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -25,7 +28,7 @@ public class TassApplication extends Application {
     private boolean needToRefresh = false;
 
     private static Retrofit retrofit = null;
-
+    private Cloudinary cloudinary = null;
 
     private LinkedList<DashBoardModel> landingList = null;
 
@@ -34,6 +37,12 @@ public class TassApplication extends Application {
         super.onCreate();
         mInstance = this;
         landingList = new LinkedList<DashBoardModel>();
+        if (cloudinary == null) {
+           // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
+            Map config = new HashMap();
+            config.put("cloud_name", "spmakings");
+            cloudinary = new Cloudinary(config);
+        }
     }
 
 
@@ -132,5 +141,16 @@ public class TassApplication extends Application {
 
     public void setCountryList(JSONArray countryList) {
         this.countryList = countryList;
+    }
+
+
+    public Cloudinary getCloudinator() {
+        if (cloudinary == null) {
+           // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
+            Map config = new HashMap();
+            config.put("cloud_name", "spmakings");
+            cloudinary = new Cloudinary(config);
+        }
+        return cloudinary;
     }
 }

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -43,7 +44,14 @@ public class OkHttpFileUploadRequest extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
 
         exception = "";
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client;
+
+        client = new OkHttpClient.Builder()
+                .connectTimeout(300, TimeUnit.SECONDS)
+                .writeTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(300, TimeUnit.SECONDS)
+                .build();
+
         MultipartBody.Builder mBilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
 
