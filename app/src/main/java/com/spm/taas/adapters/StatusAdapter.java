@@ -94,12 +94,11 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
                     public void onClick(View v) {
                         if (callback != null) {
 
-                            Toast.makeText(mContext, "working on...", Toast.LENGTH_SHORT).show();
-//                        try {
-//                            callback.onClikced(mainData.getJSONObject(position).getString("question_id"));
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
+                            try {
+                                callback.onAssign(mainData.getJSONObject(position).getString("question_id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 });
@@ -209,6 +208,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
     public interface OnItemClicked {
         void onClikced(final String qunID);
+
+        void onAssign(final String qunID);
     }
 
     public void addOnItemClicked(final OnItemClicked callback) {

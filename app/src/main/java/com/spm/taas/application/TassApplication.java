@@ -38,7 +38,7 @@ public class TassApplication extends Application {
         mInstance = this;
         landingList = new LinkedList<DashBoardModel>();
         if (cloudinary == null) {
-           // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
+            // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
             Map config = new HashMap();
             config.put("cloud_name", "spmakings");
             cloudinary = new Cloudinary(config);
@@ -111,6 +111,11 @@ public class TassApplication extends Application {
         SharedPreferences.Editor edit = tassPreference.edit();
         edit.clear();
         edit.commit();
+        //=====Clear dashbord data.
+        if (landingList != null) {
+            landingList.clear();
+        }
+
     }
 
 
@@ -146,7 +151,7 @@ public class TassApplication extends Application {
 
     public Cloudinary getCloudinator() {
         if (cloudinary == null) {
-           // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
+            // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
             Map config = new HashMap();
             config.put("cloud_name", "spmakings");
             cloudinary = new Cloudinary(config);

@@ -25,6 +25,7 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
 
     private Context mContext;
     private JsonArray userArray;
+    private OnItemSelected callback_ = null;
     private LayoutInflater inflater;
 
     public AdminUserListAdapter(Context mContext, JsonArray userArray) {
@@ -39,7 +40,7 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         try {
             holder.userName.setText(userArray.get(position).getAsJsonObject().get("full_name").getAsString());
@@ -48,7 +49,7 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
 
             if (userArray.get(position).getAsJsonObject().get("user_type").getAsString().equalsIgnoreCase("student")) {
                 holder.expertise.setText("Grade : " + userArray.get(position).getAsJsonObject().get("degree_grade").getAsString());
-            }else{
+            } else {
                 holder.expertise.setText("Expertise : " + userArray.get(position).getAsJsonObject().get("expertise").getAsString());
             }
 
@@ -65,19 +66,24 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
             } else {
                 holder.approveHolder.setVisibility(View.VISIBLE);
 
-                holder.aaprovYes.setOnClickListener(new View.OnClickListener(){
+                holder.aaprovYes.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mContext, "Working on...", Toast.LENGTH_SHORT).show();
+
+                        if (callback_ != null) {
+                            callback_.onAccept(userArray.get(position).getAsJsonObject().get("id").getAsString());
+                        }
                     }
                 });
 
-                holder.approvNo.setOnClickListener(new View.OnClickListener(){
+                holder.approvNo.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mContext, "Working on...", Toast.LENGTH_SHORT).show();
+                        if (callback_ != null) {
+                            callback_.onReject(userArray.get(position).getAsJsonObject().get("id").getAsString());
+                        }
                     }
                 });
 
@@ -98,7 +104,7 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextViewIkarosRegular userName, userEmail, expertise, user_type;
-        private View approveHolder,aaprovYes,approvNo;
+        private View approveHolder, aaprovYes, approvNo;
         private ImageView profImage;
 
         public ViewHolder(View itemView) {
@@ -114,5 +120,15 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
             aaprovYes = itemView.findViewById(R.id.accept_yes);
             approvNo = itemView.findViewById(R.id.accept_no);
         }
+    }
+
+    public void addOnItemSelected(final OnItemSelected callback_) {
+        this.callback_ = callback_;
+    }
+
+    public interface OnItemSelected {
+        void onAccept(final String userID_);
+
+        void onReject(final String userID_);
     }
 }

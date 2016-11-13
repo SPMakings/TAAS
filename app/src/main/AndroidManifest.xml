@@ -38,6 +38,10 @@
             android:name=".QuestionDetails"
             android:label="@string/title_activity_question_details"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AssignActivity"
+            android:label="@string/title_activity_assign"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

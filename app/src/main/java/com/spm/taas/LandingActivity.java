@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,14 +37,22 @@ import com.spm.taas.fragments.ProblemSolution;
 import com.spm.taas.fragments.ProblemsUpload;
 import com.spm.taas.fragments.StatusFragment;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LandingActivity extends AppCompatActivity {
 
     private ImageView header_prof_img = null;
     private TextViewIkarosRegular header_prof_name = null;
     private TextViewIkarosLight header_prof_type = null, uploadText = null;
-    private final int STORAGE_PERMISSION_CODE = 1, PICK_IMAGE = 100;
+    private final int STORAGE_PERMISSION_CODE = 1, PICK_IMAGE = 100, PICK_CAMERA = 200;
     private OnImageFetched imageCallback = null;
     private View footer_home, footer_upload, footer_subjects;
+    private String mCurrentPhotoPath = "";
+    //========
+    private onNeedRefresh callback_ = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +179,7 @@ public class LandingActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void openListView() {
+    public void openListView() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.landing_fragment_bucket, new StatusFragment());
@@ -214,7 +225,7 @@ public class LandingActivity extends AppCompatActivity {
 
 
     private boolean isReadStorageAllowed() {
-        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (result == PackageManager.PERMISSION_GRANTED)
             return true;
         return false;
@@ -223,7 +234,10 @@ public class LandingActivity extends AppCompatActivity {
 
     private void requestStoragePermission() {
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
             new AlertDialog.Builder(this)
                     .setTitle("Permission")
@@ -239,20 +253,21 @@ public class LandingActivity extends AppCompatActivity {
             }).show();
 
         }
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+        ActivityCompat.requestPermissions(this, PERMISSIONS, STORAGE_PERMISSION_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 openIntent();
             } else {
                 new AlertDialog.Builder(this)
                         .setTitle("Permission")
                         .setMessage("Oops! you just denied the permission. Without this permission " +
-                                "TAAS can't get image from your phone. Do you want to allow us?")
+                                "TAAS can't get image from your phone or if you use camera TAAS can't save the file to your phone" +
+                                ". Do you want to allow us?")
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
@@ -276,11 +291,59 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     private void openIntent() {
-        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE);
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_chooser, null);
+        dialogBuilder.setView(dialogView);
+        final AlertDialog alertDialog = dialogBuilder.create();
+
+        dialogView.findViewById(R.id.camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                try {
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()));
+                    startActivityForResult(cameraIntent, PICK_CAMERA);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(LandingActivity.this, "Failed to create file.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        dialogView.findViewById(R.id.gallery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                alertDialog.dismiss();
+
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(intent, PICK_IMAGE);
+            }
+        });
+
+        alertDialog.show();
+
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "TAAS_" + timeStamp;
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".png",         // suffix
+                storageDir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -311,6 +374,8 @@ public class LandingActivity extends AppCompatActivity {
 
             try {
                 if (imageCallback != null) {
+                    //Log.i("Camera", RealPathHelper.getPath(LandingActivity.this, selectedImage));
+
                     imageCallback.onSuccess(RealPathHelper.getPath(LandingActivity.this, selectedImage));
                 }
             } catch (Exception e) {
@@ -321,6 +386,23 @@ public class LandingActivity extends AppCompatActivity {
 
             // }
 
+        } else if (requestCode == PICK_CAMERA && resultCode == RESULT_OK) {
+
+            Log.i("Camera", mCurrentPhotoPath);
+
+            File fl_ = new File(mCurrentPhotoPath);
+            Log.i("Camera", "Exist : " + fl_.exists());
+            if (fl_.exists()) {
+                imageCallback.onSuccess(mCurrentPhotoPath);
+            } else {
+                if (imageCallback != null) {
+                    imageCallback.onError("Failed to write file.");
+                }
+            }
+        } else if (requestCode == 1000 && resultCode == RESULT_OK) {
+            if (callback_ != null) {
+                callback_.onRefresh();
+            }
         } else {
             if (imageCallback != null) {
                 imageCallback.onError("You haven't select any image.");
@@ -329,5 +411,20 @@ public class LandingActivity extends AppCompatActivity {
 
     }
 
+
+    public void assignTeacher(final String qunID_, final String subject_) {
+        Intent i = new Intent(LandingActivity.this, AssignActivity.class);
+        i.putExtra("subject", subject_);
+        i.putExtra("questionID", qunID_);
+        startActivityForResult(i, 1000);
+    }
+
+    public interface onNeedRefresh {
+        void onRefresh();
+    }
+
+    public void addOnNeedRefresh(onNeedRefresh callback_) {
+        this.callback_ = callback_;
+    }
 
 }

@@ -37,6 +37,7 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
     private TextViewIkarosLight problemPosstedOn;
     private View probAttachedHolder, makePayment, assignTo;
     private LinkedList<View> question_file_set, answer_file_set;
+    private String SELECTED_SUBJECT = "";
 
 
     @Override
@@ -98,7 +99,12 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(QuestionDetails.this, "Working on...", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(QuestionDetails.this, "Working on...", Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent(QuestionDetails.this, AssignActivity.class);
+                i.putExtra("subject", SELECTED_SUBJECT);
+                i.putExtra("questionID", getIntent().getStringExtra("QUN_ID"));
+                startActivityForResult(i, 100);
             }
         });
 
@@ -143,7 +149,8 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
                                 hideProgress();
 
                                 try {
-                                    questionID.setText("Question ID : " + jObject.getJSONObject("question_details").getString("question_id"));
+                                    SELECTED_SUBJECT = jObject.getJSONObject("question_details").getString("subject");
+                                    questionID.setText("Question ID : " + jObject.getJSONObject("question_details").getString("question_id") + "    Subject : " + SELECTED_SUBJECT);
                                     questionTitle.setText("Question Title : " + jObject.getJSONObject("question_details").getString("question_title"));
                                     questionDetails.setText("Description : " + jObject.getJSONObject("question_details").getString("question_desc"));
 
@@ -163,7 +170,9 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
                                         ansAssignStatus.setText("Question is not assigned yet.");
                                         ansSolvedStatus.setVisibility(View.GONE);
                                         makePayment.setVisibility(View.GONE);
+                                        assignTo.setVisibility(View.VISIBLE);
                                     } else {
+                                        assignTo.setVisibility(View.GONE);
 
                                         ansAssignStatus.setText("Assigned to " +
                                                 jObject.getJSONObject("question_details").getString("assigned_teacher") +
@@ -238,5 +247,13 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
         startActivity(i);
 
 //        Toast.makeText(this, "Working on...", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            getQuestionDetails(getIntent().getStringExtra("QUN_ID"));
+        }
     }
 }

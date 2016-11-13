@@ -52,7 +52,7 @@ public class DashBoardAdapter extends RecyclerView.Adapter<DashBoardAdapter.View
 
         holder.subjectText.setText(mainData.get(position).getSubjectName());
         holder.subjectCount.setText(mainData.get(position).getSubjectCount());
-        Log.i("tipikal", "Count : " + mainData.get(position).getHeaderCount() + " Position : " + position);
+        //Log.i("tipikal", "Count : " + mainData.get(position).getHeaderCount() + " Position : " + position);
 
         if (mainData.get(position).isHeader()) {
             holder.headerText.setText(mainData.get(position).getHeaderName());

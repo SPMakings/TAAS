@@ -204,7 +204,7 @@ public class HomeStudent extends TAASFragment {
         temp_.setHeader(true);
         temp_.setHeaderColor(R.color.problems_cancel);
         temp_.setHeaderCount(mainObj_.getJSONObject("cancel_count").getString("total"));
-        temp_.setHeaderName("Assigned Problems");
+        temp_.setHeaderName("Cancelled Problems");
         temp_.setSubjectName("Mathematics");
         temp_.setSubjectCount(mainObj_.getJSONObject("cancel_count").getString("Mathematics"));
         mainData_.add(temp_);

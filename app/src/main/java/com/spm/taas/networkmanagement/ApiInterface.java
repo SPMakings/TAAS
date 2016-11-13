@@ -18,4 +18,14 @@ public interface ApiInterface {
                                       @Query("subject") String subject_,
                                       @Query("status_type") String approved_);
 
+    @GET("app_control/assign_teacher")
+    Call<JsonObject> getAdminAsignQuestion(@Query("admin_id") String userID_,
+                                           @Query("teacher_id") String startIndex_,
+                                           @Query("email_id") String rowCount_);
+
+
+    @GET("app_control/accept_or_reject")
+    Call<JsonObject> getAdminAcceptRejectUser(@Query("teacher_id") String userID_,
+                                              @Query("status") String startIndex_);
+
 }

@@ -4,4 +4,5 @@
     <string name="title_activity_landing">LandingActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_question_details">QuestionDetails</string>
+    <string name="title_activity_assign">AssignActivity</string>
 </resources>

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.spm.taas.LandingActivity;
 import com.spm.taas.QuestionDetails;
 import com.spm.taas.R;
 import com.spm.taas.adapters.StatusAdapter;
@@ -35,6 +36,7 @@ public class StatusFragment extends TAASFragment {
     private View physics, chemistry, mathematics;
     private StatusAdapter statAdapter = null;
     private JSONArray physicsStatus = null, chemStatus = null, mathStatus = null;
+    private String currentSelcted = "";
 
 
     @Nullable
@@ -57,7 +59,7 @@ public class StatusFragment extends TAASFragment {
 
         //pageStatus = PAGE_STATUS.PHYSICS;
         getQuestionListing("physics");
-
+        currentSelcted = "physics";
 
         physics.setOnClickListener(new View.OnClickListener() {
 
@@ -88,12 +90,24 @@ public class StatusFragment extends TAASFragment {
                                     }
                                 });
                             }
+
+                            @Override
+                            public void onAssign(final String qunID) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((LandingActivity) getActivity()).assignTeacher(qunID, "physics");
+                                    }
+                                });
+                            }
                         });
                     }
 
                 } else {
                     getQuestionListing("physics");
                 }
+
+                currentSelcted = "physics";
 
             }
         });
@@ -127,12 +141,24 @@ public class StatusFragment extends TAASFragment {
                                     }
                                 });
                             }
+
+                            @Override
+                            public void onAssign(final String qunID) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((LandingActivity) getActivity()).assignTeacher(qunID, "chemistry");
+                                    }
+                                });
+                            }
                         });
                     }
 
                 } else {
                     getQuestionListing("chemistry");
                 }
+
+                currentSelcted = "chemistry";
             }
         });
 
@@ -164,6 +190,16 @@ public class StatusFragment extends TAASFragment {
                                     }
                                 });
                             }
+
+                            @Override
+                            public void onAssign(final String qunID) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((LandingActivity) getActivity()).assignTeacher(qunID, "mathematics");
+                                    }
+                                });
+                            }
                         });
                     }
 
@@ -171,14 +207,31 @@ public class StatusFragment extends TAASFragment {
                     getQuestionListing("mathematics");
                 }
 
+                currentSelcted = "mathematics";
+
             }
         });
 
+
+        //==========
+
+        ((LandingActivity) getActivity()).addOnNeedRefresh(new LandingActivity.onNeedRefresh() {
+            @Override
+            public void onRefresh() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getQuestionListing(currentSelcted);
+                    }
+                });
+            }
+        });
 
     }
 
 
     private void getQuestionListing(final String subject_) {
+        Log.i("aaign", "getQuestionListing : " + subject_);
         showProgress();
         HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER +
                 "get_email_list?user_id=" +
@@ -228,6 +281,16 @@ public class StatusFragment extends TAASFragment {
                                                                 Intent i = new Intent(getActivity(), QuestionDetails.class);
                                                                 i.putExtra("QUN_ID", qunID);
                                                                 startActivity(i);
+                                                            }
+                                                        });
+                                                    }
+
+                                                    @Override
+                                                    public void onAssign(final String qunID) {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                ((LandingActivity) getActivity()).assignTeacher(qunID, subject_);
                                                             }
                                                         });
                                                     }

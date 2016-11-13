@@ -1,8 +1,10 @@
 package com.spm.taas.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,8 +14,11 @@ import android.view.ViewGroup;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.spm.taas.AssignActivity;
+import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
 import com.spm.taas.adapters.AdminUserListAdapter;
+import com.spm.taas.adapters.AssignTeacherAdapter;
 import com.spm.taas.application.TassApplication;
 import com.spm.taas.baseclass.TAASFragment;
 import com.spm.taas.networkmanagement.ApiInterface;
@@ -108,7 +113,58 @@ public class AdminUserList extends TAASFragment {
                     JsonObject object = response.body();
                     notApprovedArray = object.getAsJsonArray("data");
                     Log.i(TAG, "Length : " + notApprovedArray.size());
-                    userList.setAdapter(new AdminUserListAdapter(getActivity(), notApprovedArray));
+                    AdminUserListAdapter tempAdap_ = new AdminUserListAdapter(getActivity(), notApprovedArray);
+                    userList.setAdapter(tempAdap_);
+                    tempAdap_.addOnItemSelected(new AdminUserListAdapter.OnItemSelected() {
+
+                        @Override
+                        public void onAccept(final String userID_) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle("Teacher Accept")
+                                            .setMessage("Do you want to accept this user?")
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                    acceptOrReject(userID_, "Y");
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onReject(final String userID_) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle("Teacher Accept")
+                                            .setMessage("Do you want to reject this user?")
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                    acceptOrReject(userID_, "N");
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .show();
+                                }
+                            });
+                        }
+                    });
                 } else {
                     try {
                         showError("User", response.errorBody().string().toString());
@@ -162,4 +218,45 @@ public class AdminUserList extends TAASFragment {
             }
         });
     }
+
+    ///=======Accept or reject.
+
+    private void acceptOrReject(final String teacherID_, final String status) {
+
+        showProgress();
+        ApiInterface apiService = TassApplication.getClient().create(ApiInterface.class);
+        Call<JsonObject> call = apiService.getAdminAcceptRejectUser(teacherID_, status);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                hideProgress();
+                if (response.code() == 200) {
+                    JsonObject object = response.body();
+                    if (object.get("status").getAsString().equalsIgnoreCase("SUCCESS")) {
+                        ((LandingActivity) getActivity()).openListView();
+                    } else {
+                        showError("User", "User type is not Teacher.");
+                    }
+                    Log.i("assign", object.toString());
+                } else {
+                    try {
+                        showError("User", response.errorBody().string().toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // Log error here since request failed
+                Log.e("assign", t.toString());
+                hideProgress();
+                showError("Server", t.toString());
+            }
+        });
+    }
+
 }

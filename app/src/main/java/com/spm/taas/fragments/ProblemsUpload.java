@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Base64OutputStream;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,10 +44,12 @@ import com.spm.taas.networkmanagement.onHttpResponseListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -158,6 +162,9 @@ public class ProblemsUpload extends TAASFragment {
 
             @Override
             public void onClick(View v) {
+
+//                selectedImages = pAdapter.getCUrrentArray();
+//                (new Base64Converter()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 if (sunjectTitle.getText().toString().trim().length() > 0) {
                     if (subjectDesc.getText().toString().trim().length() > 0) {
@@ -368,6 +375,83 @@ public class ProblemsUpload extends TAASFragment {
 
 
             return null;
+        }
+    }
+
+
+    private class Base64Converter extends AsyncTask<Void, Void, Void> {
+
+        private String attachedFile = "";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgress();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                File originalFile = new File(selectedImages.get(0));
+                FileInputStream fileInputStreamReader = new FileInputStream(originalFile);
+                byte[] bytes = new byte[(int)originalFile.length()];
+                fileInputStreamReader.read(bytes);
+                attachedFile  = Base64.encodeToString(bytes, Base64.DEFAULT);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (attachedFile.equalsIgnoreCase("")) {
+                Toast.makeText(getActivity(), "Unable to convert this file.", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.i("BASE64", selectedImages.get(0));
+                Log.i("BASE64", attachedFile);
+                String[] flPath_ = selectedImages.get(0).split("\\.");
+                Log.i("BASE64", "Extention : " + flPath_[flPath_.length - 1]);// flPath_[flPath_.length - 1]);
+
+                LinkedList<KeyValuePairModel> kvPair_ = new LinkedList<>();
+                KeyValuePairModel temp_ = new KeyValuePairModel();
+                temp_.add("extension", flPath_[flPath_.length - 1]);
+                kvPair_.add(temp_);
+
+                temp_ = new KeyValuePairModel();
+                temp_.add("encode_string", attachedFile);
+                kvPair_.add(temp_);
+
+                HttpPostRequest request_ = new HttpPostRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER + "image_upload_test", kvPair_, new onHttpResponseListener() {
+                    @Override
+                    public void onSuccess(JSONObject jObject) {
+                        Log.i("BASE64", jObject.toString());
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideProgress();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(final String message) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideProgress();
+                                showError("Error",message);
+                            }
+                        });
+                    }
+                });
+                request_.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 
