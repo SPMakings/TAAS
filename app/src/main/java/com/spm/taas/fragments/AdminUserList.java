@@ -103,7 +103,7 @@ public class AdminUserList extends TAASFragment {
     private void getNeedApproved() {
         showProgress();
         ApiInterface apiService = TassApplication.getClient().create(ApiInterface.class);
-        Call<JsonObject> call = apiService.getAdminUserList(TassApplication.getInstance().getUserID(), "0", "1000", "all", "all", "N");
+        Call<JsonObject> call = apiService.getAdminUserList(TassApplication.getInstance().getUserID(), "0", "1000", "teacher", "all", "N");
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

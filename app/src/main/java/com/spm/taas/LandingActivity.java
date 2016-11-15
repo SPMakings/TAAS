@@ -419,6 +419,12 @@ public class LandingActivity extends AppCompatActivity {
         startActivityForResult(i, 1000);
     }
 
+    public void questionDetails(final String qunID) {
+        Intent i = new Intent(LandingActivity.this, QuestionDetails.class);
+        i.putExtra("QUN_ID", qunID);
+        startActivityForResult(i, 1000);
+    }
+
     public interface onNeedRefresh {
         void onRefresh();
     }

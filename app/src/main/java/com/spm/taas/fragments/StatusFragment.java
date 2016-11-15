@@ -1,6 +1,5 @@
 package com.spm.taas.fragments;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.spm.taas.LandingActivity;
-import com.spm.taas.QuestionDetails;
 import com.spm.taas.R;
 import com.spm.taas.adapters.StatusAdapter;
 import com.spm.taas.application.TassApplication;
@@ -84,9 +82,7 @@ public class StatusFragment extends TAASFragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Intent i = new Intent(getActivity(), QuestionDetails.class);
-                                        i.putExtra("QUN_ID", qunID);
-                                        startActivity(i);
+                                        ((LandingActivity) getActivity()).questionDetails(qunID);
                                     }
                                 });
                             }
@@ -135,9 +131,7 @@ public class StatusFragment extends TAASFragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Intent i = new Intent(getActivity(), QuestionDetails.class);
-                                        i.putExtra("QUN_ID", qunID);
-                                        startActivity(i);
+                                        ((LandingActivity) getActivity()).questionDetails(qunID);
                                     }
                                 });
                             }
@@ -184,9 +178,7 @@ public class StatusFragment extends TAASFragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Intent i = new Intent(getActivity(), QuestionDetails.class);
-                                        i.putExtra("QUN_ID", qunID);
-                                        startActivity(i);
+                                        ((LandingActivity) getActivity()).questionDetails(qunID);
                                     }
                                 });
                             }
@@ -278,9 +270,7 @@ public class StatusFragment extends TAASFragment {
                                                         getActivity().runOnUiThread(new Runnable() {
                                                             @Override
                                                             public void run() {
-                                                                Intent i = new Intent(getActivity(), QuestionDetails.class);
-                                                                i.putExtra("QUN_ID", qunID);
-                                                                startActivity(i);
+                                                                ((LandingActivity) getActivity()).questionDetails(qunID);
                                                             }
                                                         });
                                                     }
