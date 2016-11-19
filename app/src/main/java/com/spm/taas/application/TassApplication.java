@@ -7,6 +7,8 @@ import com.cloudinary.Cloudinary;
 import com.spm.taas.models.DashBoardModel;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -106,6 +108,26 @@ public class TassApplication extends Application {
         edit.commit();
     }
 
+    public void setUserImage(final String userImage) {
+        initPreference();
+        SharedPreferences.Editor edit = tassPreference.edit();
+        edit.putString("user_image", userImage);
+        edit.commit();
+    }
+
+
+    public void setUserDataJSON(final String userJson_) {
+        initPreference();
+        SharedPreferences.Editor edit = tassPreference.edit();
+        edit.putString("setUserDataJSON", userJson_);
+        edit.commit();
+    }
+
+    public JSONObject getUserDataJSON() throws JSONException {
+        initPreference();
+        return new JSONObject(tassPreference.getString("setUserDataJSON", ""));
+    }
+
     public void clearPreferenceData() {
         initPreference();
         SharedPreferences.Editor edit = tassPreference.edit();
@@ -122,6 +144,12 @@ public class TassApplication extends Application {
     public String getUserID() {
         initPreference();
         return tassPreference.getString("user_id", "");
+    }
+
+
+    public String getUserEmail() {
+        initPreference();
+        return tassPreference.getString("user_email", "");
     }
 
     public String getUserName() {

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ import com.spm.taas.application.CircleTransform;
 import com.spm.taas.application.OnImageFetched;
 import com.spm.taas.application.RealPathHelper;
 import com.spm.taas.application.TassApplication;
+import com.spm.taas.application.TassConstants;
+import com.spm.taas.baseclass.TAASActivity;
 import com.spm.taas.customview.TextViewIkarosLight;
 import com.spm.taas.customview.TextViewIkarosRegular;
 import com.spm.taas.fragments.AdminUserList;
@@ -36,13 +40,21 @@ import com.spm.taas.fragments.HomeStudent;
 import com.spm.taas.fragments.ProblemSolution;
 import com.spm.taas.fragments.ProblemsUpload;
 import com.spm.taas.fragments.StatusFragment;
+import com.spm.taas.networkmanagement.HttpPostRequest;
+import com.spm.taas.networkmanagement.KeyValuePairModel;
+import com.spm.taas.networkmanagement.OkHttpFileUploadRequest;
+import com.spm.taas.networkmanagement.onHttpResponseListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 
-public class LandingActivity extends AppCompatActivity {
+public class LandingActivity extends TAASActivity {
 
     private ImageView header_prof_img = null;
     private TextViewIkarosRegular header_prof_name = null;
@@ -53,6 +65,10 @@ public class LandingActivity extends AppCompatActivity {
     private String mCurrentPhotoPath = "";
     //========
     private onNeedRefresh callback_ = null;
+
+    //=======Chnage Passsword Dilaog.
+
+    private AlertDialog dlog_ = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +100,8 @@ public class LandingActivity extends AppCompatActivity {
                 .centerCrop()
                 .placeholder(R.drawable.default_place_holder)
                 .error(R.drawable.default_place_holder)
-                .crossFade().bitmapTransform(new CircleTransform(this))
+                .crossFade()
+                .bitmapTransform(new CircleTransform(this))
                 .into(header_prof_img);
 
 
@@ -216,8 +233,16 @@ public class LandingActivity extends AppCompatActivity {
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
+        } else if (item.getItemId() == R.id.action_profile) {
+
+            Intent i = new Intent(LandingActivity.this, EditProfile.class);
+            startActivity(i);
+
+        } else if (item.getItemId() == R.id.action_password) {
+            editPassword();
         } else {
-            Toast.makeText(this, "Working on...", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Working on...", Toast.LENGTH_SHORT).show();
+            editImage();
         }
 
         return super.onOptionsItemSelected(item);
@@ -433,4 +458,233 @@ public class LandingActivity extends AppCompatActivity {
         this.callback_ = callback_;
     }
 
+    private void editImage() {
+
+        AlertDialog.Builder bilder_ = new AlertDialog.Builder(LandingActivity.this);
+        final View dlogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_image, null);
+        bilder_.setView(dlogView);
+
+
+        Glide.with(this)
+                .load(TassApplication.getInstance().getUserImage())
+                .placeholder(R.drawable.default_place_holder)
+                .error(R.drawable.default_place_holder)
+                .crossFade()
+                .into(((ImageView) dlogView.findViewById(R.id.edit_profimage)));
+
+        dlogView.findViewById(R.id.upload_solution).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                fetchPictureFromGallery(new OnImageFetched() {
+                    @Override
+                    public void onSuccess(final String path_) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                new AlertDialog.Builder(LandingActivity.this)
+                                        .setTitle("TAAS")
+                                        .setMessage("Do you want to set this image as your profile image?")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing to close the dialog.
+
+                                                LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
+                                                KeyValuePairModel temp_ = new KeyValuePairModel();
+                                                temp_.add("user_id", TassApplication.getInstance().getUserID());
+                                                param_.add(temp_);
+
+                                                postProfileImage(param_, "user_image", path_, ((ImageView) dlogView.findViewById(R.id.edit_profimage)));
+
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(final String errorMessage_) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LandingActivity.this, errorMessage_, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
+
+            }
+        });
+
+
+        AlertDialog dlog_ = bilder_.create();
+        dlog_.show();
+    }
+
+
+    private void editPassword() {
+
+        AlertDialog.Builder bilder_ = new AlertDialog.Builder(LandingActivity.this);
+        final View dlogView = LayoutInflater.from(this).inflate(R.layout.dialog_change_password, null);
+        bilder_.setView(dlogView);
+
+        final EditText oldPassword_ = (EditText) dlogView.findViewById(R.id.old_pass);
+        final EditText newPassword_ = (EditText) dlogView.findViewById(R.id.new_pass);
+        final EditText confPassword_ = (EditText) dlogView.findViewById(R.id.conf_pass);
+
+
+        dlogView.findViewById(R.id.upload_solution).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (oldPassword_.getText().toString().trim().length() > 0) {
+                    if (newPassword_.getText().toString().trim().length() > 0) {
+                        if (confPassword_.getText().toString().trim().length() > 0) {
+                            if (confPassword_.getText().toString().trim().equals(newPassword_.getText().toString().trim())) {
+
+                                LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
+                                KeyValuePairModel temp_ = new KeyValuePairModel();
+                                temp_.add("old_password", oldPassword_.getText().toString().trim());
+                                param_.add(temp_);
+
+                                temp_ = new KeyValuePairModel();
+                                temp_.add("new_password", newPassword_.getText().toString().trim());
+                                param_.add(temp_);
+
+                                temp_ = new KeyValuePairModel();
+                                temp_.add("user_id", TassApplication.getInstance().getUserID());
+                                param_.add(temp_);
+
+                                dlog_.dismiss();
+                                changePassword(param_);
+
+                            } else {
+                                confPassword_.setError("New password and confirm password is not equal.");
+                            }
+                        } else {
+                            confPassword_.setError("Enter Confirm Password.");
+                        }
+                    } else {
+                        newPassword_.setError("Enter New Password.");
+                    }
+                } else {
+                    oldPassword_.setError("Enter Old Password.");
+                }
+            }
+        });
+
+        dlog_ = bilder_.create();
+        dlog_.show();
+    }
+
+
+    private void changePassword(final LinkedList<KeyValuePairModel> param_) {
+        showProgress();
+        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN + "change_password", param_, new onHttpResponseListener() {
+            @Override
+            public void onSuccess(final JSONObject jObject) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("registration", jObject.toString());
+                        hideProgress();
+                        //{"status":"SUCCESS","message":"Verification Pending."}
+                        try {
+                            if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
+                                Toast.makeText(LandingActivity.this, "Password updated successfully.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                showError("Registration", jObject.getString("message"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(final String message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        showError("Registration", message);
+                    }
+                });
+            }
+        });
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void postProfileImage(final LinkedList<KeyValuePairModel> data_, final String fileUploadTag_, final String filePath_, final ImageView previewImage) {
+
+        showProgress();
+        OkHttpFileUploadRequest request = new OkHttpFileUploadRequest(data_,
+                fileUploadTag_, filePath_,
+                TassConstants.URL_DOMAIN + "image_upload", new onHttpResponseListener() {
+            @Override
+            public void onSuccess(final JSONObject jObject) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        Log.i("response", jObject.toString());
+                        try {
+                            if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
+
+                                //======need to refresh profile image.
+
+
+                                TassApplication.getInstance().setUserImage(filePath_);
+
+                                Glide.with(getApplicationContext())
+                                        .load(TassApplication.getInstance().getUserImage())
+                                        .placeholder(R.drawable.default_place_holder)
+                                        .error(R.drawable.default_place_holder)
+                                        .crossFade()
+                                        .into(previewImage);
+
+                                Glide.with(getApplicationContext())
+                                        .load(TassApplication.getInstance().getUserImage())
+                                        .centerCrop()
+                                        .placeholder(R.drawable.default_place_holder)
+                                        .error(R.drawable.default_place_holder)
+                                        .crossFade()
+                                        .bitmapTransform(new CircleTransform(getApplicationContext()))
+                                        .into(header_prof_img);
+
+
+                            } else {
+                                showError("Error", "Failed to post this problems.");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(final String message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        showError("Error", message);
+                    }
+                });
+            }
+        });
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 }

@@ -3,24 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.spm.taas.SplashActivity">
 
-    <item
-        android:id="@+id/action_filter"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_action_filter"
-        android:title="Filter"
-        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_profile"
-        android:orderInCategory="100"
         android:icon="@drawable/ic_action_settings"
-        android:title="My Profile"
+        android:orderInCategory="100"
+        android:title="Edit Profile"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_logput"
-        android:orderInCategory="100"
+        android:id="@+id/action_password"
         android:icon="@drawable/ic_action_settings"
+        android:orderInCategory="100"
+        android:title="Change Password"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_profile_image"
+        android:icon="@drawable/ic_action_settings"
+        android:orderInCategory="100"
+        android:title="Edit Image"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_logput"
+        android:icon="@drawable/ic_action_settings"
+        android:orderInCategory="100"
         android:title="Logout"
         app:showAsAction="never" />
 

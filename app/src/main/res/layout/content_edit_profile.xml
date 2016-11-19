@@ -13,34 +13,47 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:padding="16dp">
 
-
-
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="First Name"
+                android:textColor="@color/colorAccent" />
 
             <EditText
                 android:id="@+id/txtUserName"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginTop="34dp"
                 android:background="@android:color/transparent"
                 android:hint="First Name"
                 android:inputType="textPersonName"
                 android:singleLine="true"
                 android:textColor="@color/colorAccent"
-                android:textColorHint="@android:color/white"
+                android:textColorHint="@color/colorAccent"
                 android:textCursorDrawable="@null"
                 android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@android:color/white" />
+                android:background="@color/colorAccent" />
+
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Last Name"
+                android:textColor="@color/colorAccent" />
+
 
             <EditText
                 android:id="@+id/txtUserNameLast"
@@ -51,34 +64,77 @@
                 android:hint="Last Name"
                 android:inputType="textPersonName"
                 android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
                 android:textCursorDrawable="@null"
                 android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@android:color/white" />
+                android:background="@color/colorAccent" />
+
+
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Address 1"
+                android:textColor="@color/colorAccent" />
 
             <EditText
-                android:id="@+id/textEmail"
+                android:id="@+id/textAddress1"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
+                android:hint="Address 1"
+                android:inputType="text"
                 android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
                 android:textCursorDrawable="@null"
                 android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@android:color/white" />
+                android:background="@color/colorAccent" />
+
+
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Address 2"
+                android:textColor="@color/colorAccent" />
+
+            <EditText
+                android:id="@+id/textAddress2"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/transparent"
+                android:hint="Address 2"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
+                android:textCursorDrawable="@null"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorAccent" />
+
+
+            <com.spm.taas.customview.TextViewIkarosLight
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Phone Number"
+                android:textColor="@color/colorAccent" />
 
             <EditText
                 android:id="@+id/textPhone"
@@ -89,108 +145,40 @@
                 android:hint="Phone Number"
                 android:inputType="phone"
                 android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
                 android:textCursorDrawable="@null"
                 android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@android:color/white" />
+                android:background="@color/colorAccent" />
 
             <com.spm.taas.customview.TextViewIkarosLight
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Select Country"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/colorAccent" />
 
             <Spinner
                 android:id="@+id/country"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:background="@android:color/white" />
-
-            <EditText
-                android:id="@+id/txtpassword"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/transparent"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
-                android:textCursorDrawable="@null"
-                android:textSize="18sp" />
+                android:layout_marginTop="4dp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@android:color/white" />
-
-            <EditText
-                android:id="@+id/txtpasswordCnfsm"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/transparent"
-                android:hint="Confirm Password"
-                android:inputType="textPassword"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
-                android:textCursorDrawable="@null"
-                android:textSize="18sp" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@android:color/white" />
+                android:background="@color/colorAccent" />
 
             <LinearLayout
+                android:id="@+id/student_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:weightSum="2">
-
-                <com.spm.taas.customview.TextViewIkarosRegular
-                    android:id="@+id/as_student"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
-                    android:gravity="center"
-                    android:padding="12dp"
-                    android:text="STUDENT"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
-
-                <com.spm.taas.customview.TextViewIkarosRegular
-                    android:id="@+id/as_teacher"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="12dp"
-                    android:text="TEACHER"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:padding="6dp">
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/thrd_fields"
@@ -207,47 +195,51 @@
                     android:layout_height="1px"
                     android:background="@color/colorAccent" />
 
+            </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/input_thrd_fields"
+            <LinearLayout
+                android:id="@+id/teacher_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+
+                <com.spm.taas.customview.TextViewIkarosLight
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:layout_marginTop="8dp"
+                    android:text="Select Degree"
+                    android:textColor="@color/colorAccent" />
 
+                <Spinner
+                    android:id="@+id/degree"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="4dp" />
 
-                    <com.spm.taas.customview.TextViewIkarosLight
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Select Degree"
-                        android:textColor="@color/colorAccent" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/colorAccent" />
 
-                    <Spinner
-                        android:id="@+id/degree"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginTop="4dp" />
+                <com.spm.taas.customview.TextViewIkarosLight
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Select Expertise"
+                    android:textColor="@color/colorAccent" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:background="@color/colorAccent" />
+                <Spinner
+                    android:id="@+id/expertise"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="4dp" />
 
-                    <com.spm.taas.customview.TextViewIkarosLight
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Select Expertise"
-                        android:textColor="@color/colorAccent" />
-
-                    <Spinner
-                        android:id="@+id/expertise"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginTop="4dp" />
-
-                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/colorAccent" />
 
 
             </LinearLayout>
@@ -255,18 +247,18 @@
 
             <com.spm.taas.customview.TextViewIkarosRegular
                 android:id="@+id/register_me"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="240dp"
+                android:layout_height="56dp"
                 android:layout_marginTop="26dp"
-                android:padding="12dp"
-                android:text="SIGN UP"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:text="UPDATE PROFILE"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </LinearLayout>

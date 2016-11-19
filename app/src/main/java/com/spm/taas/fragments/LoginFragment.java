@@ -87,6 +87,8 @@ public class LoginFragment extends TAASFragment {
                                 mainObj.getString("user_id"),
                                 mainObj.getString("image"));
 
+                        TassApplication.getInstance().setUserDataJSON(mainObj.toString());
+
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
