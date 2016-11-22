@@ -139,11 +139,11 @@ public class EditProfile extends TAASActivity {
 
                                         LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
                                         KeyValuePairModel temp_ = new KeyValuePairModel();
-                                        temp_.add("firstname", firstName.getText().toString().trim());
+                                        temp_.add("first_name", firstName.getText().toString().trim());
                                         param_.add(temp_);
 
                                         temp_ = new KeyValuePairModel();
-                                        temp_.add("lastname", lastName.getText().toString().trim());
+                                        temp_.add("last_name", lastName.getText().toString().trim());
                                         param_.add(temp_);
 
 
@@ -162,7 +162,7 @@ public class EditProfile extends TAASActivity {
 
 
                                         temp_ = new KeyValuePairModel();
-                                        temp_.add("phone", phoneNumber.getText().toString().trim());
+                                        temp_.add("telephone", phoneNumber.getText().toString().trim());
                                         param_.add(temp_);
 
 
@@ -171,9 +171,9 @@ public class EditProfile extends TAASActivity {
                                         param_.add(temp_);
 
 
-                                        temp_ = new KeyValuePairModel();
-                                        temp_.add("user_type", USER_TYPE);
-                                        param_.add(temp_);
+//                                        temp_ = new KeyValuePairModel();
+//                                        temp_.add("user_type", USER_TYPE);
+//                                        param_.add(temp_);
 
 
                                         //========Unused filled.
@@ -221,8 +221,12 @@ public class EditProfile extends TAASActivity {
                                         temp_.add("logged_user_id", TassApplication.getInstance().getUserID());
                                         param_.add(temp_);
 
+                                        temp_ = new KeyValuePairModel();
+                                        temp_.add("user_id", TassApplication.getInstance().getUserID());
+                                        param_.add(temp_);
 
-                                        Log.i("registration", "Going to register...");
+
+                                        Log.i("registration", "Going to register..." + param_.toString());
 
                                         regesterMe(param_);
 
@@ -235,11 +239,11 @@ public class EditProfile extends TAASActivity {
 
                                         LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
                                         KeyValuePairModel temp_ = new KeyValuePairModel();
-                                        temp_.add("firstname", firstName.getText().toString().trim());
+                                        temp_.add("first_name", firstName.getText().toString().trim());
                                         param_.add(temp_);
 
                                         temp_ = new KeyValuePairModel();
-                                        temp_.add("lastname", lastName.getText().toString().trim());
+                                        temp_.add("last_name", lastName.getText().toString().trim());
                                         param_.add(temp_);
 
 
@@ -258,7 +262,7 @@ public class EditProfile extends TAASActivity {
 
 
                                         temp_ = new KeyValuePairModel();
-                                        temp_.add("phone", phoneNumber.getText().toString().trim());
+                                        temp_.add("telephone", phoneNumber.getText().toString().trim());
                                         param_.add(temp_);
 
 
@@ -271,9 +275,9 @@ public class EditProfile extends TAASActivity {
                                         param_.add(temp_);
 
 
-                                        temp_ = new KeyValuePairModel();
-                                        temp_.add("user_type", USER_TYPE);
-                                        param_.add(temp_);
+//                                        temp_ = new KeyValuePairModel();
+//                                        temp_.add("user_type", USER_TYPE);
+//                                        param_.add(temp_);
 
 
                                         temp_ = new KeyValuePairModel();
@@ -318,6 +322,13 @@ public class EditProfile extends TAASActivity {
                                         temp_.add("logged_user_id", TassApplication.getInstance().getUserID());
                                         param_.add(temp_);
 
+                                        temp_ = new KeyValuePairModel();
+                                        temp_.add("user_id", TassApplication.getInstance().getUserID());
+                                        param_.add(temp_);
+
+
+                                        Log.i("registration", "Going to register..." + param_.toString());
+
                                         regesterMe(param_);
                                     } else {
                                         thirdFields.setError("Enter your profession.");
@@ -356,7 +367,7 @@ public class EditProfile extends TAASActivity {
             firstName.setText(userObj_.getString("first_name"));
             lastName.setText(userObj_.getString("last_name"));
             phoneNumber.setText(userObj_.getString("telephone"));
-            address1.setText(userObj_.getString("address1"));
+            address1.setText("" + userObj_.getString("address1"));
             address2.setText(userObj_.getString("address2"));
 
             if (TassApplication.getInstance().getUserType().equalsIgnoreCase("teacher")) {
@@ -416,7 +427,7 @@ public class EditProfile extends TAASActivity {
 
     private void regesterMe(final LinkedList<KeyValuePairModel> param_) {
         showProgress();
-        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN + "register", param_, new onHttpResponseListener() {
+        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER + "edit_user", param_, new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {
                 runOnUiThread(new Runnable() {

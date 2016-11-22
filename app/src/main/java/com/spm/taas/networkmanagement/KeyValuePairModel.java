@@ -16,8 +16,13 @@ public class KeyValuePairModel {
         return value;
     }
 
-    public void add(final String key_,final String value_){
+    public void add(final String key_, final String value_) {
         this.key = key_;
         this.value = value_;
+    }
+
+    @Override
+    public String toString() {
+        return "Key : " + key + " Value : " + value;
     }
 }

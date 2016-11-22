@@ -129,7 +129,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Problem File 2"
                                 android:textColor="@android:color/white" />
 
                             <com.spm.taas.customview.TextViewIkarosRegular
@@ -143,7 +143,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Problem File 3"
                                 android:textColor="@android:color/white" />
 
                             <com.spm.taas.customview.TextViewIkarosRegular
@@ -157,7 +157,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Problem File 4"
                                 android:textColor="@android:color/white" />
 
                             <com.spm.taas.customview.TextViewIkarosRegular
@@ -171,7 +171,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Problem File 5"
                                 android:textColor="@android:color/white" />
                         </LinearLayout>
 
@@ -301,7 +301,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Solution File 1"
                                 android:textColor="@android:color/white" />
 
                             <com.spm.taas.customview.TextViewIkarosRegular
@@ -315,7 +315,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Solution File 2"
                                 android:textColor="@android:color/white" />
 
                             <com.spm.taas.customview.TextViewIkarosRegular
@@ -329,7 +329,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Solution File 3"
                                 android:textColor="@android:color/white" />
 
                             <com.spm.taas.customview.TextViewIkarosRegular
@@ -343,7 +343,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Solution File 4"
                                 android:textColor="@android:color/white" />
 
                             <com.spm.taas.customview.TextViewIkarosRegular
@@ -357,7 +357,7 @@
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:paddingTop="4dp"
-                                android:text="Problem File 1"
+                                android:text="Solution File 5"
                                 android:textColor="@android:color/white" />
                         </LinearLayout>
 

@@ -380,7 +380,6 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
 
                                         ansAssignStatus.setText("Question is not assigned yet.");
                                         ansSolvedStatus.setVisibility(View.GONE);
-                                        assignTo.setVisibility(View.VISIBLE);
                                         attachedProbFileSoln.setVisibility(View.GONE);
 
                                         if (TassApplication.getInstance().getUserType().equalsIgnoreCase("admin")) {

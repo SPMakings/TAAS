@@ -385,7 +385,7 @@ public class LandingActivity extends TAASActivity {
 //                        .setMessage("This image doesn't exist in your device storage. " +
 //                                "This image is in Google Cloud. Download the image manually, then upload it.")
 //                        .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
+//                            public void onClick(DialogInterface dialog_forgot_password, int which) {
 //                                // do nothing
 //                                if (imageCallback != null) {
 //                                    imageCallback.onError("Cloud Image.");
@@ -488,7 +488,7 @@ public class LandingActivity extends TAASActivity {
                                         .setMessage("Do you want to set this image as your profile image?")
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                // do nothing to close the dialog.
+                                                // do nothing to close the dialog_forgot_password.
 
                                                 LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
                                                 KeyValuePairModel temp_ = new KeyValuePairModel();
@@ -590,7 +590,7 @@ public class LandingActivity extends TAASActivity {
 
     private void changePassword(final LinkedList<KeyValuePairModel> param_) {
         showProgress();
-        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN + "change_password", param_, new onHttpResponseListener() {
+        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER + "change_password", param_, new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {
                 runOnUiThread(new Runnable() {
@@ -603,7 +603,7 @@ public class LandingActivity extends TAASActivity {
                             if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
                                 Toast.makeText(LandingActivity.this, "Password updated successfully.", Toast.LENGTH_SHORT).show();
                             } else {
-                                showError("Registration", jObject.getString("message"));
+                                showError("Change Password", jObject.getString("message"));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -618,7 +618,7 @@ public class LandingActivity extends TAASActivity {
                     @Override
                     public void run() {
                         hideProgress();
-                        showError("Registration", message);
+                        showError("Change Password", message);
                     }
                 });
             }

@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
@@ -15,6 +18,8 @@ import com.spm.taas.application.TassApplication;
 import com.spm.taas.application.TassConstants;
 import com.spm.taas.baseclass.TAASFragment;
 import com.spm.taas.networkmanagement.HttpGetRequest;
+import com.spm.taas.networkmanagement.HttpPostRequest;
+import com.spm.taas.networkmanagement.KeyValuePairModel;
 import com.spm.taas.networkmanagement.onHttpResponseListener;
 
 import org.json.JSONException;
@@ -22,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.LinkedList;
 
 
 /**
@@ -66,6 +72,14 @@ public class LoginFragment extends TAASFragment {
                 } else {
                     emailText.setError("Invalid Email Id");
                 }
+            }
+        });
+
+
+        view.findViewById(R.id.forgot_password).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgotPasswordDialog();
             }
         });
 
@@ -123,6 +137,79 @@ public class LoginFragment extends TAASFragment {
                     public void run() {
                         hideProgress();
                         showError("Login", message);
+                    }
+                });
+            }
+        });
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    private void forgotPasswordDialog() {
+
+        AlertDialog.Builder bilder_ = new AlertDialog.Builder(getActivity());
+        final View dlogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_forgot_password, null);
+        bilder_.setView(dlogView);
+        final AlertDialog dlog_ = bilder_.create();
+
+        final EditText oldPassword_ = (EditText) dlogView.findViewById(R.id.email_forgot);
+
+        dlogView.findViewById(R.id.send_forgot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(oldPassword_.getText().toString().trim()).matches()) {
+
+
+                    dlog_.dismiss();
+
+                    LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
+                    KeyValuePairModel temp_ = new KeyValuePairModel();
+                    temp_.add("email", oldPassword_.getText().toString().trim());
+                    param_.add(temp_);
+
+                    forgotPasswordAPI(param_);
+
+                } else {
+                    oldPassword_.setError("Invalid Email");
+                }
+            }
+        });
+
+        dlog_.show();
+    }
+
+    private void forgotPasswordAPI(final LinkedList<KeyValuePairModel> param_) {
+        showProgress();
+        HttpPostRequest request = new HttpPostRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER + "forget_password", param_, new onHttpResponseListener() {
+            @Override
+            public void onSuccess(final JSONObject jObject) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("registration", jObject.toString());
+                        hideProgress();
+                        //{"status":"SUCCESS","message":"Verification Pending."}
+                        try {
+                            if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
+                                showError("Forgot Password", "A reset password link is mailed to you.");
+                            } else {
+                                showError("Forgot Password", jObject.getString("message"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(final String message) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        showError("Change Password", message);
                     }
                 });
             }

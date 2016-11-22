@@ -4,6 +4,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/tabSelected">
+
+        <ImageView
+            android:id="@+id/search_filter"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:src="@drawable/ic_action_down_arrow" />
+
+        <EditText
+            android:id="@+id/qun_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/search_button"
+            android:layout_toRightOf="@+id/search_filter"
+            android:background="@android:color/transparent"
+            android:hint="Search"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+
+        <ImageView
+            android:id="@+id/search_button"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_action_search" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
