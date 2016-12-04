@@ -92,6 +92,8 @@ public class ProblemsUpload extends TAASFragment {
         previewHolder.setAdapter(pAdapter);
 
 
+        getActivity().findViewById(R.id.status_filter).setVisibility(View.GONE);
+
         subjectList.setAdapter(initSubjectListAdapter());
         subjectList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

@@ -42,10 +42,17 @@
                 android:layout_marginTop="4dp"
                 android:text="Question List" />
 
-            <Spinner
+            <com.spm.taas.customview.TextViewIkarosRegular
                 android:id="@+id/question_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center_vertical"
+                android:paddingLeft="12dp"
+                android:text="Tap here to select a question."
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
 
             <View
                 android:layout_width="match_parent"

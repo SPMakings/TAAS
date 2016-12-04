@@ -1,5 +1,6 @@
 package com.spm.taas.fragments;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,9 +10,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -22,10 +25,12 @@ import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
 import com.spm.taas.adapters.ProblemPreviewAdapter;
 import com.spm.taas.adapters.QuestionSpinnerAdapter;
+import com.spm.taas.adapters.StatusAdapter;
 import com.spm.taas.application.OnImageFetched;
 import com.spm.taas.application.TassApplication;
 import com.spm.taas.application.TassConstants;
 import com.spm.taas.baseclass.TAASFragment;
+import com.spm.taas.customview.TextViewIkarosRegular;
 import com.spm.taas.networkmanagement.HttpGetRequest;
 import com.spm.taas.networkmanagement.HttpPostRequest;
 import com.spm.taas.networkmanagement.KeyValuePairModel;
@@ -50,9 +55,12 @@ public class ProblemSolution extends TAASFragment {
     private ProblemPreviewAdapter pAdapter = null;
     private ArrayList<String> stateArray = null, subjectsArray = null;
     private String SELECTED_STATUS = "", SELECTED_QUESTION_ID = "", SELECTED_SUBJECT = "";
-    private Spinner questionList = null, statusList = null, subjectList = null;
+    private Spinner statusList = null, subjectList = null;
     private EditText sunjectTitle;
     private LinkedList<String> selectedImages = null;
+    private Dialog dlog_ = null;
+    private RecyclerView questionView_ = null;
+    private TextViewIkarosRegular tapToSelectQuestion = null;
 
 
     @Nullable
@@ -65,9 +73,9 @@ public class ProblemSolution extends TAASFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        questionList = (Spinner) view.findViewById(R.id.question_list);
         statusList = (Spinner) view.findViewById(R.id.status_list);
         subjectList = (Spinner) view.findViewById(R.id.subject_list);
+        tapToSelectQuestion = (TextViewIkarosRegular) view.findViewById(R.id.question_list);
 
         sunjectTitle = (EditText) view.findViewById(R.id.question_title);
 
@@ -77,6 +85,17 @@ public class ProblemSolution extends TAASFragment {
         previewHolder.setItemAnimator(new DefaultItemAnimator());
         pAdapter = new ProblemPreviewAdapter(getActivity(), new LinkedList<String>());
         previewHolder.setAdapter(pAdapter);
+
+
+        getActivity().findViewById(R.id.status_filter).setVisibility(View.GONE);
+
+
+        tapToSelectQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                questionChooser();
+            }
+        });
 
 
         statusList.setAdapter(initStatusListAdapter());
@@ -97,7 +116,6 @@ public class ProblemSolution extends TAASFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SELECTED_SUBJECT = subjectsArray.get(position).toLowerCase();
-                getQuestionList(SELECTED_SUBJECT);
             }
 
             @Override
@@ -207,7 +225,7 @@ public class ProblemSolution extends TAASFragment {
                                     })
                                     .show();
                         } else {
-                            showError("Question Status", "There is no assigned question of selected subjec for you to post solution.");
+                            showError("Question Status", "Select a question to post this answer.");
                         }
                     } else {
                         showError("Problem", "You have to post at least 1 image(Max 3) of your problem.");
@@ -269,7 +287,6 @@ public class ProblemSolution extends TAASFragment {
                                     previewHolder.setVisibility(View.GONE);
                                     TassApplication.getInstance().setNeedToRefresh(true);
                                     Toast.makeText(getActivity(), "Problem posted successfully.", Toast.LENGTH_SHORT).show();
-                                    getQuestionList(SELECTED_SUBJECT);
                                 }
 
                             } else {
@@ -358,30 +375,40 @@ public class ProblemSolution extends TAASFragment {
                             @Override
                             public void run() {
                                 hideProgress();
-//                                Log.i("dhoperchop", TassConstants.URL_DOMAIN_APP_CONTROLLER +
-//                                        "get_email_list?user_id=" +
-//                                        TassApplication.getInstance().getUserID() +
-//                                        "&subject=" + subject_);
 //                                Log.i("dhoperchop", jObject.toString());
                                 try {
                                     if (jObject.getJSONArray("data").length() > 0) {
-                                        questionList.setAdapter(new QuestionSpinnerAdapter(getActivity(), jObject.getJSONArray("data")));
-                                        questionList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+                                        StatusAdapter statAdapter = new StatusAdapter(getActivity(), jObject.getJSONArray("data"));
+                                        questionView_.setAdapter(statAdapter);
+
+                                        statAdapter.addOnItemClicked(new StatusAdapter.OnItemClicked() {
                                             @Override
-                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                try {
-                                                    SELECTED_QUESTION_ID = jObject.getJSONArray("data").getJSONObject(position).getString("question_id").toLowerCase();
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
+                                            public void onClikced(final String qunID) {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (dlog_ != null) {
+                                                            dlog_.dismiss();
+                                                        }
+                                                        SELECTED_QUESTION_ID = qunID;
+                                                        tapToSelectQuestion.setText("Selected Question ID: " + SELECTED_QUESTION_ID);
+                                                    }
+                                                });
                                             }
 
                                             @Override
-                                            public void onNothingSelected(AdapterView<?> parent) {
-
+                                            public void onAssign(String qunID) {
+                                                //====No use here.
                                             }
                                         });
+
+
                                     } else {
+                                        if (dlog_ != null) {
+                                            dlog_.dismiss();
+                                        }
                                         showError("Question Status", "There is no assigned question of " + subject_.toUpperCase() + " for you to post solution. Please select another subject for questions.");
                                     }
                                 } catch (JSONException e) {
@@ -406,6 +433,55 @@ public class ProblemSolution extends TAASFragment {
                     }
                 });
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void questionChooser() {
+        dlog_ = new Dialog(getActivity(), R.style.MaterialDialogSheet);
+        dlog_.setCanceledOnTouchOutside(true);
+        final View dlog_view_ = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_question_chooser, null);
+        dlog_.setContentView(dlog_view_);
+        dlog_.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        dlog_.getWindow().setGravity(Gravity.BOTTOM);
+
+        dlog_view_.findViewById(R.id.back_me_dlog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dlog_ != null) {
+                    dlog_.dismiss();
+                }
+
+                if (SELECTED_QUESTION_ID.equals("")) {
+                    tapToSelectQuestion.setText("Tap to select question.");
+                } else {
+                    tapToSelectQuestion.setText("Selected Question ID: " + SELECTED_QUESTION_ID);
+                }
+            }
+        });
+
+        dlog_view_.findViewById(R.id.cross_me).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dlog_ != null) {
+                    dlog_.dismiss();
+                }
+
+                if (SELECTED_QUESTION_ID.equals("")) {
+                    tapToSelectQuestion.setText("Tap to select question.");
+                } else {
+                    tapToSelectQuestion.setText("Selected Question ID: " + SELECTED_QUESTION_ID);
+                }
+            }
+        });
+
+
+        questionView_ = (RecyclerView) dlog_view_.findViewById(R.id.chooser_dialog_list);
+        questionView_.setHasFixedSize(true);
+        questionView_.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        dlog_.show();
+
+        SELECTED_QUESTION_ID = "";
+        getQuestionList(SELECTED_SUBJECT);
     }
 
 

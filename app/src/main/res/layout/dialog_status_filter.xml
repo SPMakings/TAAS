@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/clear_filter"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="No Filter"
+        android:textColor="@color/colorAccent" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/short_by_posted"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="Short By Posted Date"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/short_by_assigned"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="Short By Assigned Date"
+        android:textColor="@color/colorAccent" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/short_by_solved"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="Short By Solved Date"
+        android:textColor="@color/colorAccent" />
+
+</LinearLayout>

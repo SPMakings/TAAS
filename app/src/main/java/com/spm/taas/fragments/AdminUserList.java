@@ -58,6 +58,7 @@ public class AdminUserList extends TAASFragment {
         userList.setLayoutManager(new LinearLayoutManager(getActivity()));
         userList.setHasFixedSize(true);
 
+        getActivity().findViewById(R.id.status_filter).setVisibility(View.GONE);
 
         //================
 

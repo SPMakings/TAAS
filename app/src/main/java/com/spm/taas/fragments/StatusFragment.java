@@ -1,6 +1,8 @@
 package com.spm.taas.fragments;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,10 +13,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.spm.taas.LandingActivity;
@@ -43,7 +48,7 @@ public class StatusFragment extends TAASFragment {
     private StatusAdapter statAdapter = null;
     private EditText searchText = null;
     private JSONArray physicsStatus = null, chemStatus = null, mathStatus = null;
-    private String currentSelcted = "", cuurentSearch = "by_title";
+    private String currentSelcted = "", cuurentSearch = "by_title", currentFilter = "clear_all";
 
 
     @Nullable
@@ -69,6 +74,17 @@ public class StatusFragment extends TAASFragment {
         //pageStatus = PAGE_STATUS.PHYSICS;
         getQuestionListing("physics");
         currentSelcted = "physics";
+
+
+        getActivity().findViewById(R.id.status_filter).setVisibility(View.VISIBLE);
+
+
+        getActivity().findViewById(R.id.status_filter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFilter();
+            }
+        });
 
         physics.setOnClickListener(new View.OnClickListener() {
 
@@ -115,6 +131,7 @@ public class StatusFragment extends TAASFragment {
                 }
 
                 currentSelcted = "physics";
+                currentFilter = "clear_all";
 
             }
         });
@@ -164,6 +181,7 @@ public class StatusFragment extends TAASFragment {
                 }
 
                 currentSelcted = "chemistry";
+                currentFilter = "clear_all";
             }
         });
 
@@ -211,6 +229,7 @@ public class StatusFragment extends TAASFragment {
                 }
 
                 currentSelcted = "mathematics";
+                currentFilter = "clear_all";
 
             }
         });
@@ -501,6 +520,208 @@ public class StatusFragment extends TAASFragment {
                 });
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+    }
+
+    private void getQuestionListingByFilter(final String subject_, final String searchKey_) {
+
+        Log.i("aaign", "getQuestionListing : " + TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                "get_email_list?user_id=" +
+                TassApplication.getInstance().getUserID() +
+                "&subject=" +
+                subject_ + "&search_key=" +
+                searchKey_ +
+                "&start=0&count=1000&sort_by=" +
+                cuurentSearch + "&sort_type=ASC");
+
+        showProgress();
+        HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                "search_question?user_id=" +
+                TassApplication.getInstance().getUserID() +
+                "&subject=" +
+                subject_ + "&search_key=" +
+                searchKey_ +
+                "&start=0&count=1000&search_filter=" +
+                cuurentSearch + "&status=Y",
+                new onHttpResponseListener() {
+                    @Override
+                    public void onSuccess(final JSONObject jObject) {
+                        //Log.i("result_main", jObject.toString());
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hideProgress();
+                                    try {
+                                        if (jObject.getJSONArray("data").length() > 0) {
+
+
+                                            if (jObject.getJSONArray("data").length() > 0) {
+                                                statAdapter = new StatusAdapter(getActivity(), jObject.getJSONArray("data"));
+                                                statusListing.setAdapter(statAdapter);
+                                            }
+
+
+                                            if (statAdapter != null) {
+
+                                                statAdapter.addOnItemClicked(new StatusAdapter.OnItemClicked() {
+                                                    @Override
+                                                    public void onClikced(final String qunID) {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                ((LandingActivity) getActivity()).questionDetails(qunID);
+                                                            }
+                                                        });
+                                                    }
+
+                                                    @Override
+                                                    public void onAssign(final String qunID) {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                ((LandingActivity) getActivity()).assignTeacher(qunID, subject_);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+
+
+                                        } else {
+                                            showError("Status", "No question found for this subject.");
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        showError("Status", e.toString());
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onError(final String message) {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hideProgress();
+                                    showError("Status", message);
+                                }
+                            });
+                        }
+                    }
+                });
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
+
+    private void showFilter() {
+
+        final Dialog dlog_ = new Dialog(getActivity(), R.style.MaterialDialogSheet);
+        dlog_.setCanceledOnTouchOutside(true);
+        final View dlog_view_ = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_status_filter, null);
+        dlog_.setContentView(dlog_view_);
+        dlog_.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dlog_.getWindow().setGravity(Gravity.BOTTOM);
+
+        final View clearAll = dlog_view_.findViewById(R.id.clear_filter);
+        final View byPosted = dlog_view_.findViewById(R.id.short_by_posted);
+        final View byAssigned = dlog_view_.findViewById(R.id.short_by_assigned);
+        final View bySolved = dlog_view_.findViewById(R.id.short_by_solved);
+
+
+        if (TassApplication.getInstance().getUserType().equalsIgnoreCase("admin")) {
+            byPosted.setVisibility(View.VISIBLE);
+        } else {
+            byPosted.setVisibility(View.GONE);
+        }
+
+        if (currentFilter.equalsIgnoreCase("P")) {
+            clearAll.setBackgroundColor(Color.WHITE);
+            byPosted.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            byAssigned.setBackgroundColor(Color.WHITE);
+            bySolved.setBackgroundColor(Color.WHITE);
+        } else if (currentFilter.equalsIgnoreCase("A")) {
+            clearAll.setBackgroundColor(Color.WHITE);
+            byAssigned.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            byPosted.setBackgroundColor(Color.WHITE);
+            bySolved.setBackgroundColor(Color.WHITE);
+        } else if (currentFilter.equalsIgnoreCase("S")) {
+            clearAll.setBackgroundColor(Color.WHITE);
+            bySolved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            byPosted.setBackgroundColor(Color.WHITE);
+            byAssigned.setBackgroundColor(Color.WHITE);
+        } else {
+            bySolved.setBackgroundColor(Color.WHITE);
+            clearAll.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            byPosted.setBackgroundColor(Color.WHITE);
+            byAssigned.setBackgroundColor(Color.WHITE);
+        }
+
+        byPosted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll.setBackgroundColor(Color.WHITE);
+                byPosted.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                byAssigned.setBackgroundColor(Color.WHITE);
+                bySolved.setBackgroundColor(Color.WHITE);
+
+                currentFilter = "P";
+                dlog_.dismiss();
+                getQuestionListingByFilter(currentSelcted, currentFilter);
+            }
+        });
+
+
+        byAssigned.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll.setBackgroundColor(Color.WHITE);
+                byAssigned.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                byPosted.setBackgroundColor(Color.WHITE);
+                bySolved.setBackgroundColor(Color.WHITE);
+
+                currentFilter = "A";
+                dlog_.dismiss();
+                getQuestionListingByFilter(currentSelcted, currentFilter);
+            }
+        });
+
+
+        bySolved.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll.setBackgroundColor(Color.WHITE);
+                bySolved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                byPosted.setBackgroundColor(Color.WHITE);
+                byAssigned.setBackgroundColor(Color.WHITE);
+
+                currentFilter = "S";
+                dlog_.dismiss();
+                getQuestionListingByFilter(currentSelcted, currentFilter);
+            }
+        });
+
+
+        clearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bySolved.setBackgroundColor(Color.WHITE);
+                clearAll.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                byPosted.setBackgroundColor(Color.WHITE);
+                byAssigned.setBackgroundColor(Color.WHITE);
+
+                currentFilter = "clear_all";
+
+                dlog_.dismiss();
+                getQuestionListing(currentSelcted);
+
+
+            }
+        });
+        dlog_.show();
     }
 
 

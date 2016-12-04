@@ -40,6 +40,7 @@ import com.spm.taas.fragments.HomeStudent;
 import com.spm.taas.fragments.ProblemSolution;
 import com.spm.taas.fragments.ProblemsUpload;
 import com.spm.taas.fragments.StatusFragment;
+import com.spm.taas.networkmanagement.HttpGetRequest;
 import com.spm.taas.networkmanagement.HttpPostRequest;
 import com.spm.taas.networkmanagement.KeyValuePairModel;
 import com.spm.taas.networkmanagement.OkHttpFileUploadRequest;
@@ -220,10 +221,7 @@ public class LandingActivity extends TAASActivity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // do nothing
-                            TassApplication.getInstance().clearPreferenceData();
-                            Intent i = new Intent(LandingActivity.this, SplashActivity.class);
-                            startActivity(i);
-                            finish();
+                            logMeOut();
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -625,6 +623,77 @@ public class LandingActivity extends TAASActivity {
         });
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    private void logMeOut() {
+        showProgress();
+        HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                "logout?user_id=" +
+                TassApplication.getInstance().getUserID() +
+                "&device_type=android", new onHttpResponseListener() {
+            @Override
+            public void onSuccess(final JSONObject jObject) {
+                try {
+                    if (jObject.getString("status").equalsIgnoreCase("SUCCESS") || jObject.getString("status").equalsIgnoreCase("FAIL")) {
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideProgress();
+                                TassApplication.getInstance().clearPreferenceData();
+                                Intent i = new Intent(LandingActivity.this, SplashActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    hideProgress();
+
+                                    new AlertDialog.Builder(LandingActivity.this)
+                                            .setTitle("Error")
+                                            .setMessage("Unable to Logout. Try Again!")
+                                            .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                    logMeOut();
+                                                }
+                                            })
+                                            .setIcon(R.mipmap.ic_launcher)
+                                            .show();
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(final String message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        showError("Login", message);
+                    }
+                });
+            }
+        });
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     private void postProfileImage(final LinkedList<KeyValuePairModel> data_, final String fileUploadTag_, final String filePath_, final ImageView previewImage) {
 

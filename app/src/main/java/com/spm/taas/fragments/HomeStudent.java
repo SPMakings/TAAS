@@ -52,6 +52,8 @@ public class HomeStudent extends TAASFragment {
         mainLandingView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainLandingView.setItemAnimator(new DefaultItemAnimator());
 
+        getActivity().findViewById(R.id.status_filter).setVisibility(View.GONE);
+
 
         if (TassApplication.getInstance().getLandingList().size() == 0 || TassApplication.getInstance().isNeedToRefresh()) {
             getLandingData("show_all");

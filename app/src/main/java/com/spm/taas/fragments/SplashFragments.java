@@ -1,10 +1,12 @@
 package com.spm.taas.fragments;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,47 +65,68 @@ public class SplashFragments extends Fragment {
 
 
         if (TassApplication.getInstance().getCountryList() == null) {
-            HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN + "countries", new onHttpResponseListener() {
-                @Override
-                public void onSuccess(final JSONObject jObject) {
-                    try {
-                        TassApplication.getInstance().setCountryList(jObject.getJSONArray("data"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                pBar.setVisibility(View.INVISIBLE);
-                                actionViewgroup.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }
-
-                }
-
-                @Override
-                public void onError(final String message) {
-                    Log.i("v", message);
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                pBar.setVisibility(View.INVISIBLE);
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-
-                }
-            });
-            request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            fetchCountryList();
         } else {
             //Log.i("Country", "Country is there " + TassApplication.getInstance().getCountryList());
             pBar.setVisibility(View.INVISIBLE);
             actionViewgroup.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private void fetchCountryList() {
+        HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN + "countries", new onHttpResponseListener() {
+            @Override
+            public void onSuccess(final JSONObject jObject) {
+                try {
+                    TassApplication.getInstance().setCountryList(jObject.getJSONArray("data"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pBar.setVisibility(View.INVISIBLE);
+                            actionViewgroup.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onError(final String message) {
+                Log.i("v", message);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pBar.setVisibility(View.INVISIBLE);
+
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("Error")
+                                    .setMessage("Failed to fetch necessary data. Please retry!")
+                                    .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                            fetchCountryList();
+                                        }
+                                    })
+                                    .setIcon(R.mipmap.ic_launcher)
+                                    .show();
+
+                        }
+                    });
+                }
+
+            }
+        });
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

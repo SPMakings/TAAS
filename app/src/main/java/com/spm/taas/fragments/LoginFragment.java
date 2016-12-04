@@ -88,7 +88,7 @@ public class LoginFragment extends TAASFragment {
 
     private void logMeIn(final String email, final String password) {
         showProgress();
-        HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN + "login?email=" + email + "&password=" + password, new onHttpResponseListener() {
+        HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN + "login?email=" + email + "&device_type=android&password=" + password, new onHttpResponseListener() {
             @Override
             public void onSuccess(final JSONObject jObject) {
                 try {
