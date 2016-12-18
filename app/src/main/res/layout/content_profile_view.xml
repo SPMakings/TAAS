@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_profile_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.spm.taas.ProfileViewActivity"
+    tools:showIn="@layout/activity_profile_view">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitXY" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Name"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="User Type"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="User Email"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Address"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Phone Number"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <!--<com.spm.taas.customview.TextViewIkarosRegular-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:text="Country"-->
+            <!--android:textSize="12sp" />-->
+
+            <!--<com.spm.taas.customview.TextViewIkarosRegular-->
+            <!--android:id="@+id/profile_country"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="6dp"-->
+            <!--android:text="Name"-->
+            <!--android:textColor="@color/colorPrimaryDark" />-->
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Grade"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Selected Degree"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_degree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Selected Expertise"
+                android:textSize="12sp" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/profile_expertise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimaryDark" />
+
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="User Activation Management"
+                android:textSize="12sp" />
+
+            <Spinner
+                android:id="@+id/profile_activation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/register_me"
+                android:layout_width="240dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="26dp"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:text="UPDATE PROFILE"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

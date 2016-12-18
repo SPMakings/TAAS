@@ -524,24 +524,51 @@ public class StatusFragment extends TAASFragment {
 
     private void getQuestionListingByFilter(final String subject_, final String searchKey_) {
 
-        Log.i("aaign", "getQuestionListing : " + TassConstants.URL_DOMAIN_APP_CONTROLLER +
-                "get_email_list?user_id=" +
-                TassApplication.getInstance().getUserID() +
-                "&subject=" +
-                subject_ + "&search_key=" +
-                searchKey_ +
-                "&start=0&count=1000&sort_by=" +
-                cuurentSearch + "&sort_type=ASC");
+        String url;
+
+        if (searchKey_.equalsIgnoreCase("P")) {
+
+            url = TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                    "get_email_list?user_id=" +
+                    TassApplication.getInstance().getUserID() +
+                    "&subject=" +
+                    subject_ + "&start=0&count=1000&sort_by=P&sort_type=ASC";
+        } else if (searchKey_.equalsIgnoreCase("PD")) {
+            url = TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                    "get_email_list?user_id=" +
+                    TassApplication.getInstance().getUserID() +
+                    "&subject=" +
+                    subject_ + "&start=0&count=1000&sort_by=P&sort_type=DESC";
+        } else if (searchKey_.equalsIgnoreCase("A")) {
+            url = TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                    "get_email_list?user_id=" +
+                    TassApplication.getInstance().getUserID() +
+                    "&subject=" +
+                    subject_ + "&start=0&count=1000&sort_by=A&sort_type=ASC";
+        } else if (searchKey_.equalsIgnoreCase("AD")) {
+            url = TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                    "get_email_list?user_id=" +
+                    TassApplication.getInstance().getUserID() +
+                    "&subject=" +
+                    subject_ + "&start=0&count=1000&sort_by=A&sort_type=DESC";
+        } else if (searchKey_.equalsIgnoreCase("S")) {
+            url = TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                    "get_email_list?user_id=" +
+                    TassApplication.getInstance().getUserID() +
+                    "&subject=" +
+                    subject_ + "&start=0&count=1000&sort_by=S&sort_type=ASC";
+        } else {
+            url = TassConstants.URL_DOMAIN_APP_CONTROLLER +
+                    "get_email_list?user_id=" +
+                    TassApplication.getInstance().getUserID() +
+                    "&subject=" +
+                    subject_ + "&start=0&count=1000&sort_by=S&sort_type=DESC";
+        }
+
+        Log.i("aaign", "getQuestionListing : " + url);
 
         showProgress();
-        HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER +
-                "search_question?user_id=" +
-                TassApplication.getInstance().getUserID() +
-                "&subject=" +
-                subject_ + "&search_key=" +
-                searchKey_ +
-                "&start=0&count=1000&search_filter=" +
-                cuurentSearch + "&status=Y",
+        HttpGetRequest request = new HttpGetRequest(url,
                 new onHttpResponseListener() {
                     @Override
                     public void onSuccess(final JSONObject jObject) {
@@ -628,62 +655,153 @@ public class StatusFragment extends TAASFragment {
 
         final View clearAll = dlog_view_.findViewById(R.id.clear_filter);
         final View byPosted = dlog_view_.findViewById(R.id.short_by_posted);
+        final View byPostedDesc = dlog_view_.findViewById(R.id.short_by_posted_desc);
         final View byAssigned = dlog_view_.findViewById(R.id.short_by_assigned);
+        final View byAssignedDesc = dlog_view_.findViewById(R.id.short_by_desc);
         final View bySolved = dlog_view_.findViewById(R.id.short_by_solved);
+        final View bySolvedDesc = dlog_view_.findViewById(R.id.short_by_solved_desc);
 
 
         if (TassApplication.getInstance().getUserType().equalsIgnoreCase("admin")) {
             byPosted.setVisibility(View.VISIBLE);
+            byPostedDesc.setVisibility(View.VISIBLE);
         } else {
             byPosted.setVisibility(View.GONE);
         }
 
         if (currentFilter.equalsIgnoreCase("P")) {
             clearAll.setBackgroundColor(Color.WHITE);
-            byPosted.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            byPosted.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
             byAssigned.setBackgroundColor(Color.WHITE);
             bySolved.setBackgroundColor(Color.WHITE);
+
+            byPostedDesc.setBackgroundColor(Color.WHITE);
+            byAssignedDesc.setBackgroundColor(Color.WHITE);
+            bySolvedDesc.setBackgroundColor(Color.WHITE);
+        } else if (currentFilter.equalsIgnoreCase("PD")) {
+            clearAll.setBackgroundColor(Color.WHITE);
+            byAssigned.setBackgroundColor(Color.WHITE);
+            byPosted.setBackgroundColor(Color.WHITE);
+            bySolved.setBackgroundColor(Color.WHITE);
+            byPostedDesc.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
+            byAssignedDesc.setBackgroundColor(Color.WHITE);
+            bySolvedDesc.setBackgroundColor(Color.WHITE);
+
         } else if (currentFilter.equalsIgnoreCase("A")) {
             clearAll.setBackgroundColor(Color.WHITE);
-            byAssigned.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            byAssigned.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
             byPosted.setBackgroundColor(Color.WHITE);
             bySolved.setBackgroundColor(Color.WHITE);
+
+            byPostedDesc.setBackgroundColor(Color.WHITE);
+            byAssignedDesc.setBackgroundColor(Color.WHITE);
+            bySolvedDesc.setBackgroundColor(Color.WHITE);
+
+        } else if (currentFilter.equalsIgnoreCase("AD")) {
+            clearAll.setBackgroundColor(Color.WHITE);
+            byAssigned.setBackgroundColor(Color.WHITE);
+            byPosted.setBackgroundColor(Color.WHITE);
+            bySolved.setBackgroundColor(Color.WHITE);
+
+            byPostedDesc.setBackgroundColor(Color.WHITE);
+            byAssignedDesc.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
+            bySolvedDesc.setBackgroundColor(Color.WHITE);
+
         } else if (currentFilter.equalsIgnoreCase("S")) {
             clearAll.setBackgroundColor(Color.WHITE);
-            bySolved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            bySolved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
             byPosted.setBackgroundColor(Color.WHITE);
             byAssigned.setBackgroundColor(Color.WHITE);
+
+            byPostedDesc.setBackgroundColor(Color.WHITE);
+            byAssignedDesc.setBackgroundColor(Color.WHITE);
+            bySolvedDesc.setBackgroundColor(Color.WHITE);
+
+        } else if (currentFilter.equalsIgnoreCase("SD")) {
+            clearAll.setBackgroundColor(Color.WHITE);
+            bySolved.setBackgroundColor(Color.WHITE);
+            byPosted.setBackgroundColor(Color.WHITE);
+            byAssigned.setBackgroundColor(Color.WHITE);
+
+            byPostedDesc.setBackgroundColor(Color.WHITE);
+            byAssignedDesc.setBackgroundColor(Color.WHITE);
+            bySolvedDesc.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
         } else {
             bySolved.setBackgroundColor(Color.WHITE);
-            clearAll.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            clearAll.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
             byPosted.setBackgroundColor(Color.WHITE);
             byAssigned.setBackgroundColor(Color.WHITE);
+
+            byPostedDesc.setBackgroundColor(Color.WHITE);
+            byAssignedDesc.setBackgroundColor(Color.WHITE);
+            bySolvedDesc.setBackgroundColor(Color.WHITE);
         }
 
         byPosted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearAll.setBackgroundColor(Color.WHITE);
-                byPosted.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                byPosted.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
                 byAssigned.setBackgroundColor(Color.WHITE);
                 bySolved.setBackgroundColor(Color.WHITE);
 
+                byPostedDesc.setBackgroundColor(Color.WHITE);
+                byAssignedDesc.setBackgroundColor(Color.WHITE);
+                bySolvedDesc.setBackgroundColor(Color.WHITE);
                 currentFilter = "P";
                 dlog_.dismiss();
                 getQuestionListingByFilter(currentSelcted, currentFilter);
             }
         });
 
+        byPostedDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll.setBackgroundColor(Color.WHITE);
+                byAssigned.setBackgroundColor(Color.WHITE);
+                byPosted.setBackgroundColor(Color.WHITE);
+                bySolved.setBackgroundColor(Color.WHITE);
+                byPostedDesc.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
+                byAssignedDesc.setBackgroundColor(Color.WHITE);
+                bySolvedDesc.setBackgroundColor(Color.WHITE);
+                currentFilter = "PD";
+                dlog_.dismiss();
+                getQuestionListingByFilter(currentSelcted, currentFilter);
+            }
+        });
 
         byAssigned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearAll.setBackgroundColor(Color.WHITE);
-                byAssigned.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                byAssigned.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
                 byPosted.setBackgroundColor(Color.WHITE);
                 bySolved.setBackgroundColor(Color.WHITE);
 
+                byPostedDesc.setBackgroundColor(Color.WHITE);
+                byAssignedDesc.setBackgroundColor(Color.WHITE);
+                bySolvedDesc.setBackgroundColor(Color.WHITE);
+
                 currentFilter = "A";
+                dlog_.dismiss();
+                getQuestionListingByFilter(currentSelcted, currentFilter);
+            }
+        });
+
+        byAssignedDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                clearAll.setBackgroundColor(Color.WHITE);
+                byAssigned.setBackgroundColor(Color.WHITE);
+                byPosted.setBackgroundColor(Color.WHITE);
+                bySolved.setBackgroundColor(Color.WHITE);
+
+                byPostedDesc.setBackgroundColor(Color.WHITE);
+                byAssignedDesc.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
+                bySolvedDesc.setBackgroundColor(Color.WHITE);
+
+                currentFilter = "AD";
                 dlog_.dismiss();
                 getQuestionListingByFilter(currentSelcted, currentFilter);
             }
@@ -694,7 +812,7 @@ public class StatusFragment extends TAASFragment {
             @Override
             public void onClick(View v) {
                 clearAll.setBackgroundColor(Color.WHITE);
-                bySolved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                bySolved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
                 byPosted.setBackgroundColor(Color.WHITE);
                 byAssigned.setBackgroundColor(Color.WHITE);
 
@@ -705,11 +823,26 @@ public class StatusFragment extends TAASFragment {
         });
 
 
+        bySolvedDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll.setBackgroundColor(Color.WHITE);
+                bySolved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
+                byPosted.setBackgroundColor(Color.WHITE);
+                byAssigned.setBackgroundColor(Color.WHITE);
+
+                currentFilter = "SD";
+                dlog_.dismiss();
+                getQuestionListingByFilter(currentSelcted, currentFilter);
+            }
+        });
+
+
         clearAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bySolved.setBackgroundColor(Color.WHITE);
-                clearAll.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+                clearAll.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.filterSelected));
                 byPosted.setBackgroundColor(Color.WHITE);
                 byAssigned.setBackgroundColor(Color.WHITE);
 

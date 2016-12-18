@@ -1,6 +1,7 @@
 package com.spm.taas.fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spm.taas.AssignActivity;
 import com.spm.taas.LandingActivity;
+import com.spm.taas.ProfileViewActivity;
 import com.spm.taas.R;
 import com.spm.taas.adapters.AdminUserListAdapter;
 import com.spm.taas.adapters.AssignTeacherAdapter;
@@ -29,6 +31,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by saikatpakira on 05/11/16.
  */
@@ -37,6 +41,7 @@ public class AdminUserList extends TAASFragment {
 
     final String TAG = "AdminUserList";
     private RecyclerView userList = null;
+    private View errorBlock = null;
     private View needToApproved, approved;
     private JsonArray notApprovedArray = null, approvedArray = null;
 
@@ -53,6 +58,7 @@ public class AdminUserList extends TAASFragment {
         super.onViewCreated(view, savedInstanceState);
 
         needToApproved = view.findViewById(R.id.need_approved);
+        errorBlock = view.findViewById(R.id.error_visibility);
         approved = view.findViewById(R.id.approved);
         userList = (RecyclerView) view.findViewById(R.id.user_list_Admin);
         userList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -70,7 +76,75 @@ public class AdminUserList extends TAASFragment {
                 needToApproved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
                 approved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
                 if (notApprovedArray != null) {
-                    userList.setAdapter(new AdminUserListAdapter(getActivity(), notApprovedArray));
+                    AdminUserListAdapter tempAdap_ = new AdminUserListAdapter(getActivity(), notApprovedArray);
+                    userList.setAdapter(tempAdap_);
+                    if (notApprovedArray.size() > 0) {
+                        errorBlock.setVisibility(View.GONE);
+                        tempAdap_.addOnItemSelected(new AdminUserListAdapter.OnItemSelected() {
+
+                            @Override
+                            public void onAccept(final String userID_) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Teacher Accept")
+                                                .setMessage("Do you want to accept this user?")
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                        acceptOrReject(userID_, "Y");
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onDetails(final String userID_) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent i = new Intent(getActivity(), ProfileViewActivity.class);
+                                        i.putExtra("profile_id", userID_);
+                                        startActivityForResult(i, 5000);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onReject(final String userID_) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Teacher Accept")
+                                                .setMessage("Do you want to reject this user?")
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                        acceptOrReject(userID_, "N");
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        errorBlock.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     getNeedApproved();
                 }
@@ -86,7 +160,41 @@ public class AdminUserList extends TAASFragment {
                 needToApproved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
 
                 if (approvedArray != null) {
-                    userList.setAdapter(new AdminUserListAdapter(getActivity(), approvedArray));
+                    AdminUserListAdapter temp_ = new AdminUserListAdapter(getActivity(), approvedArray);
+                    userList.setAdapter(temp_);
+                    if (approvedArray.size() > 0) {
+                        errorBlock.setVisibility(View.GONE);
+                        temp_.addOnItemSelected(new AdminUserListAdapter.OnItemSelected() {
+                            @Override
+                            public void onAccept(final String userID_) {
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        Intent i = new Intent(getActivity(), ProfileViewActivity.class);
+                                        i.putExtra("profile_id", userID_);
+                                        //startActivity(i);
+                                        startActivityForResult(i, 5000);
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onDetails(String userID_) {
+
+                            }
+
+                            @Override
+                            public void onReject(String userID_) {
+                                //====no use here.
+                            }
+                        });
+                    } else {
+                        errorBlock.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     getApproved();
                 }
@@ -94,14 +202,23 @@ public class AdminUserList extends TAASFragment {
             }
         });
 
+
         //=============Initial Opening.
         needToApproved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
         approved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
         getNeedApproved();
+
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
 
     private void getNeedApproved() {
+        errorBlock.setVisibility(View.GONE);
         showProgress();
         ApiInterface apiService = TassApplication.getClient().create(ApiInterface.class);
         Call<JsonObject> call = apiService.getAdminUserList(TassApplication.getInstance().getUserID(), "0", "1000", "teacher", "all", "N");
@@ -113,59 +230,79 @@ public class AdminUserList extends TAASFragment {
                 if (response.code() == 200) {
                     JsonObject object = response.body();
                     notApprovedArray = object.getAsJsonArray("data");
-                    Log.i(TAG, "Length : " + notApprovedArray.size());
+
                     AdminUserListAdapter tempAdap_ = new AdminUserListAdapter(getActivity(), notApprovedArray);
                     userList.setAdapter(tempAdap_);
-                    tempAdap_.addOnItemSelected(new AdminUserListAdapter.OnItemSelected() {
 
-                        @Override
-                        public void onAccept(final String userID_) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new AlertDialog.Builder(getActivity())
-                                            .setTitle("Teacher Accept")
-                                            .setMessage("Do you want to accept this user?")
-                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // do nothing
-                                                    acceptOrReject(userID_, "Y");
-                                                }
-                                            })
-                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // do nothing
-                                                }
-                                            })
-                                            .show();
-                                }
-                            });
-                        }
+                    if (notApprovedArray.size() > 0) {
 
-                        @Override
-                        public void onReject(final String userID_) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new AlertDialog.Builder(getActivity())
-                                            .setTitle("Teacher Accept")
-                                            .setMessage("Do you want to reject this user?")
-                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // do nothing
-                                                    acceptOrReject(userID_, "N");
-                                                }
-                                            })
-                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // do nothing
-                                                }
-                                            })
-                                            .show();
-                                }
-                            });
-                        }
-                    });
+                        tempAdap_.addOnItemSelected(new AdminUserListAdapter.OnItemSelected() {
+
+                            @Override
+                            public void onAccept(final String userID_) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Teacher Accept")
+                                                .setMessage("Do you want to accept this user?")
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                        acceptOrReject(userID_, "Y");
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onDetails(final String userID_) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent i = new Intent(getActivity(), ProfileViewActivity.class);
+                                        i.putExtra("profile_id", userID_);
+                                        startActivityForResult(i, 5000);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onReject(final String userID_) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Teacher Accept")
+                                                .setMessage("Do you want to reject this user?")
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                        acceptOrReject(userID_, "N");
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        errorBlock.setVisibility(View.VISIBLE);
+                    }
+
+
                 } else {
                     try {
                         showError("User", response.errorBody().string().toString());
@@ -187,7 +324,7 @@ public class AdminUserList extends TAASFragment {
     }
 
     private void getApproved() {
-
+        errorBlock.setVisibility(View.GONE);
         showProgress();
         ApiInterface apiService = TassApplication.getClient().create(ApiInterface.class);
         Call<JsonObject> call = apiService.getAdminUserList(TassApplication.getInstance().getUserID(), "0", "1000", "all", "all", "Y");
@@ -199,7 +336,44 @@ public class AdminUserList extends TAASFragment {
                 if (response.code() == 200) {
                     JsonObject object = response.body();
                     approvedArray = object.getAsJsonArray("data");
-                    userList.setAdapter(new AdminUserListAdapter(getActivity(), approvedArray));
+                    AdminUserListAdapter temp_ = new AdminUserListAdapter(getActivity(), approvedArray);
+                    userList.setAdapter(temp_);
+
+                    if (approvedArray.size() > 0) {
+
+                        temp_.addOnItemSelected(new AdminUserListAdapter.OnItemSelected() {
+                            @Override
+                            public void onAccept(final String userID_) {
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        Intent i = new Intent(getActivity(), ProfileViewActivity.class);
+                                        i.putExtra("profile_id", userID_);
+                                        //startActivity(i);
+                                        startActivityForResult(i, 5000);
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onDetails(String userID_) {
+
+                            }
+
+                            @Override
+                            public void onReject(String userID_) {
+                                //====no use here.
+                            }
+                        });
+                    } else {
+                        errorBlock.setVisibility(View.VISIBLE);
+                    }
+
+
                 } else {
                     try {
                         showError("User", response.errorBody().string().toString());
@@ -235,7 +409,7 @@ public class AdminUserList extends TAASFragment {
                 if (response.code() == 200) {
                     JsonObject object = response.body();
                     if (object.get("status").getAsString().equalsIgnoreCase("SUCCESS")) {
-                        ((LandingActivity) getActivity()).openListView();
+                        ((LandingActivity) getActivity()).openAdminUserList();
                     } else {
                         showError("User", "User type is not Teacher.");
                     }
@@ -260,4 +434,17 @@ public class AdminUserList extends TAASFragment {
         });
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 5000 && resultCode == RESULT_OK) {
+            //=============Initial Opening.
+            needToApproved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tabSelected));
+            approved.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+            getNeedApproved();
+        }
+
+    }
 }

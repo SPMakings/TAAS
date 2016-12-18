@@ -183,7 +183,7 @@ public class LandingActivity extends TAASActivity {
         fragmentTransaction.commit();
     }
 
-    private void openAdminUserList() {
+    public void openAdminUserList() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.landing_fragment_bucket, new AdminUserList());
@@ -425,6 +425,10 @@ public class LandingActivity extends TAASActivity {
         } else if (requestCode == 1000 && resultCode == RESULT_OK) {
             if (callback_ != null) {
                 callback_.onRefresh();
+            }
+        } else if (requestCode == 5000 && resultCode == RESULT_OK) {
+            if (TassApplication.getInstance().getUserType().equalsIgnoreCase("admin")) {
+                openAdminUserList();
             }
         } else {
             if (imageCallback != null) {
@@ -756,4 +760,5 @@ public class LandingActivity extends TAASActivity {
         });
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 }

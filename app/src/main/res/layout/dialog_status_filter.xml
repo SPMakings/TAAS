@@ -14,15 +14,35 @@
         android:text="No Filter"
         android:textColor="@color/colorAccent" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorPrimaryDark" />
+
     <com.spm.taas.customview.TextViewIkarosRegular
         android:id="@+id/short_by_posted"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Posted Date"
+        android:text="Short By Posted Date - Ascending"
         android:textColor="@color/colorAccent"
         android:visibility="gone" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/short_by_posted_desc"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="Short By Posted Date - Descending"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorPrimaryDark" />
 
     <com.spm.taas.customview.TextViewIkarosRegular
         android:id="@+id/short_by_assigned"
@@ -30,8 +50,22 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Assigned Date"
+        android:text="Short By Assigned Date - Ascending"
         android:textColor="@color/colorAccent" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/short_by_desc"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="Short By Assigned Date - Descending"
+        android:textColor="@color/colorAccent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorPrimaryDark" />
 
     <com.spm.taas.customview.TextViewIkarosRegular
         android:id="@+id/short_by_solved"
@@ -39,7 +73,16 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Solved Date"
+        android:text="Short By Solved Date - Ascending"
+        android:textColor="@color/colorAccent" />
+
+    <com.spm.taas.customview.TextViewIkarosRegular
+        android:id="@+id/short_by_solved_desc"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="Short By Solved Date - Descending"
         android:textColor="@color/colorAccent" />
 
 </LinearLayout>

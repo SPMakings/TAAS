@@ -47,7 +47,6 @@ public class TassApplication extends Application {
         }
     }
 
-
     public static synchronized Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()

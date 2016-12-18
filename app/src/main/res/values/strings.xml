@@ -6,4 +6,5 @@
     <string name="title_activity_question_details">QuestionDetails</string>
     <string name="title_activity_assign">AssignActivity</string>
     <string name="title_activity_edit_profile">EditProfile</string>
+    <string name="title_activity_profile_view">ProfileViewActivity</string>
 </resources>

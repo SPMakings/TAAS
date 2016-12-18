@@ -63,8 +63,32 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
 
             if (userArray.get(position).getAsJsonObject().get("status").getAsString().equalsIgnoreCase("Approved")) {
                 holder.approveHolder.setVisibility(View.GONE);
+
+                holder.mainView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        if (callback_ != null) {
+                            callback_.onAccept(userArray.get(position).getAsJsonObject().get("id").getAsString());
+                        }
+                    }
+                });
+
             } else {
                 holder.approveHolder.setVisibility(View.VISIBLE);
+
+
+                holder.mainView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        if (callback_ != null) {
+                            callback_.onDetails(userArray.get(position).getAsJsonObject().get("id").getAsString());
+                        }
+                    }
+                });
 
                 holder.aaprovYes.setOnClickListener(new View.OnClickListener() {
 
@@ -104,12 +128,13 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextViewIkarosRegular userName, userEmail, expertise, user_type;
-        private View approveHolder, aaprovYes, approvNo;
+        private View approveHolder, aaprovYes, approvNo, mainView;
         private ImageView profImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
+            mainView = itemView;
             user_type = (TextViewIkarosRegular) itemView.findViewById(R.id.user_type);
             userName = (TextViewIkarosRegular) itemView.findViewById(R.id.user_name);
             userEmail = (TextViewIkarosRegular) itemView.findViewById(R.id.qun_id);
@@ -128,6 +153,8 @@ public class AdminUserListAdapter extends RecyclerView.Adapter<AdminUserListAdap
 
     public interface OnItemSelected {
         void onAccept(final String userID_);
+
+        void onDetails(final String userID_);
 
         void onReject(final String userID_);
     }

@@ -5,6 +5,7 @@
     <color name="colorAccent">#42475B</color>
 
     <color name="tabSelected">#787c87</color>
+    <color name="filterSelected">#9ba0ae</color>
     <color name="problems_new">#5d9cec</color>
     <color name="problems_solved">#81c868</color>
     <color name="problems_assigned">#7266ba</color>
