@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * Created by saikatpakira on 27/10/16.
@@ -103,7 +104,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
                     }
                 });
             } else {
-                if (mainData.getJSONObject(position).getString("assign_date").toString().equalsIgnoreCase("null")) {
+                if (mainData.getJSONObject(position).getString("assign_date").toString().equalsIgnoreCase("null")
+                        || mainData.getJSONObject(position).getString("assign_date").startsWith("0000-00-00")) {
 
                     holder.assigned.setText("Not Assigned");
                     holder.solved.setText("Not Solved");
@@ -112,7 +114,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
                     holder.solved.setBackgroundResource(R.drawable.rounded_corner_yellow);
                     holder.accepted.setBackgroundResource(R.drawable.rounded_corner_yellow);
 
-                } else if (mainData.getJSONObject(position).getString("uploaded_on").toString().equalsIgnoreCase("null")) {
+                } else if (mainData.getJSONObject(position).getString("uploaded_on").toString().equalsIgnoreCase("null")
+                        || mainData.getJSONObject(position).getString("uploaded_on").startsWith("0000-00-00")) {
 
                     String[] temp2_ = mainData.getJSONObject(position).getString("assign_date").split(" ");
                     holder.assigned.setText("A : " + temp2_[0]);
@@ -129,7 +132,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
                     holder.assigned.setText("A : " + temp2_[0]);
 
                     String[] temp3_ = mainData.getJSONObject(position).getString("uploaded_on").split(" ");
-                    holder.solved.setText("S : " + temp2_[0]);
+                    holder.solved.setText("S : " + temp3_[0]);
 
                     holder.accepted.setText("Not Accepted");
                     holder.assigned.setBackgroundResource(R.drawable.rounded_corner_green);
@@ -139,6 +142,9 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
                     String[] temp2_ = mainData.getJSONObject(position).getString("assign_date").split(" ");
                     holder.assigned.setText("A : " + temp2_[0]);
+
+                    Log.i("getQuestionListing", mainData.getJSONObject(position).getString("assign_date"));
+                    Log.i("getQuestionListing", mainData.getJSONObject(position).getString("uploaded_on"));
 
                     String[] temp3_ = mainData.getJSONObject(position).getString("uploaded_on").split(" ");
                     holder.solved.setText("S : " + temp3_[0]);

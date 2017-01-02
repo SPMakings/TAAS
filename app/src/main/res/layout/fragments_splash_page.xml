@@ -38,7 +38,7 @@
     <com.spm.taas.customview.TextViewIkarosLight
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TUTORING AS SERVICE"
+        android:text="Tutoring As A Service"
         android:textColor="@android:color/white"
         android:textSize="22sp" />
 

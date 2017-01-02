@@ -379,8 +379,12 @@ public class RegistrationFragment extends TAASFragment {
                         //{"status":"SUCCESS","message":"Verification Pending."}
                         try {
                             if (jObject.getString("status").equalsIgnoreCase("SUCCESS")) {
-                                showError("Registration", "Registration successful. Now TAAS will verify your provided info as soon" +
-                                        " as possible. Please wait until verification.");
+
+                                if(USER_TYPE.equals("S")){
+                                    showError("Registration", "Thanks for registering. Please check your email to confirm the registration. Then come back to log in");
+                                }else{
+                                    showError("Registration", "Thanks for registering. Please check your email to confirm the registration. Then wait for TAAS Admin to approve it.");
+                                }
                                 firstName.setText("");
                                 lastName.setText("");
                                 email.setText("");

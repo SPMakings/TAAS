@@ -376,7 +376,8 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
                                     }
                                     //========Question Details Done.=============================
 
-                                    if (jObject.getJSONObject("question_details").getString("assign_date").toString().equalsIgnoreCase("null")) {
+                                    if (jObject.getJSONObject("question_details").getString("assign_date").toString().equalsIgnoreCase("null")
+                                            || jObject.getJSONObject("question_details").getString("assign_date").startsWith("0000-00-00")) {
 
                                         ansAssignStatus.setText("Question is not assigned yet.");
                                         ansSolvedStatus.setVisibility(View.GONE);

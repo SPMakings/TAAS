@@ -572,7 +572,7 @@ public class StatusFragment extends TAASFragment {
                 new onHttpResponseListener() {
                     @Override
                     public void onSuccess(final JSONObject jObject) {
-                        //Log.i("result_main", jObject.toString());
+                        Log.i("result_main", jObject.toString());
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override

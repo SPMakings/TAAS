@@ -25,7 +25,7 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Posted Date - Ascending"
+        android:text="Sort By Posted Date - Ascending"
         android:textColor="@color/colorAccent"
         android:visibility="gone" />
 
@@ -35,7 +35,7 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Posted Date - Descending"
+        android:text="Sort By Posted Date - Descending"
         android:textColor="@color/colorAccent"
         android:visibility="gone" />
 
@@ -50,7 +50,7 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Assigned Date - Ascending"
+        android:text="Sort By Assigned Date - Ascending"
         android:textColor="@color/colorAccent" />
 
     <com.spm.taas.customview.TextViewIkarosRegular
@@ -59,7 +59,7 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Assigned Date - Descending"
+        android:text="Sort By Assigned Date - Descending"
         android:textColor="@color/colorAccent" />
 
     <View
@@ -73,7 +73,7 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Solved Date - Ascending"
+        android:text="Sort By Solved Date - Ascending"
         android:textColor="@color/colorAccent" />
 
     <com.spm.taas.customview.TextViewIkarosRegular
@@ -82,7 +82,7 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Short By Solved Date - Descending"
+        android:text="Sort By Solved Date - Descending"
         android:textColor="@color/colorAccent" />
 
 </LinearLayout>
