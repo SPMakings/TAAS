@@ -193,8 +193,8 @@ public class RegistrationFragment extends TAASFragment {
                                                 if (USER_TYPE.equals("S")) {
                                                     Log.i("rdfield", thirdFields.getText().toString().trim());
                                                     if (thirdFields.getText().toString().trim().length() > 0) {
-                                                        if (Integer.parseInt(thirdFields.getText().toString().trim()) > 0
-                                                                && Integer.parseInt(thirdFields.getText().toString().trim()) < 9) {
+                                                        if (Integer.parseInt(thirdFields.getText().toString().trim()) > 6
+                                                                && Integer.parseInt(thirdFields.getText().toString().trim()) < 13) {
 
                                                             LinkedList<KeyValuePairModel> param_ = new LinkedList<KeyValuePairModel>();
                                                             KeyValuePairModel temp_ = new KeyValuePairModel();
@@ -241,10 +241,10 @@ public class RegistrationFragment extends TAASFragment {
                                                             regesterMe(param_);
 
                                                         } else {
-                                                            thirdFields.setError("Grade must be 1 to 8");
+                                                            thirdFields.setError("Grade must be 7 to 12");
                                                         }
                                                     } else {
-                                                        thirdFields.setError("Enter Grade, must be 1 to 8");
+                                                        thirdFields.setError("Enter Grade, must be 7 to 12");
                                                     }
                                                 } else {
                                                     if (thirdFields.getText().toString().trim().length() > 0) {
@@ -298,7 +298,7 @@ public class RegistrationFragment extends TAASFragment {
                                                         param_.add(temp_);
 
                                                         temp_ = new KeyValuePairModel();
-                                                        temp_.add("expertise", SELECTED_EXPERT);
+                                                        temp_.add("expertise", SELECTED_EXPERT.toLowerCase());
                                                         param_.add(temp_);
 
                                                         regesterMe(param_);
@@ -355,10 +355,10 @@ public class RegistrationFragment extends TAASFragment {
         categoriesExp.add("Physics");
         categoriesExp.add("Chemistry");
         categoriesExp.add("Mathematics");
-        categoriesExp.add("Math+Phy");
-        categoriesExp.add("Math+Chem");
-        categoriesExp.add("Phy+Chem");
-        categoriesExp.add("Phy+Chem+Math");
+        categoriesExp.add("Mathematics,Physics");
+        categoriesExp.add("Mathematics,Chemistry");
+        categoriesExp.add("Physics,Chemistry");
+        categoriesExp.add("Physics,Chemistry,Mathematics");
         SELECTED_EXPERT = "Physics";
         ArrayAdapter<String> dataAdapterExper = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categoriesExp);
         dataAdapterExper.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

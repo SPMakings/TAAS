@@ -363,11 +363,13 @@ public class ProblemSolution extends TAASFragment {
     }
 
     private void getQuestionList(final String subject_) {
+        //=======change here
+        //https://urtaas.com/app_control/get_solved_email?teacher_id=63&subject=physics&start=0&count=100
         showProgress();
         HttpGetRequest request = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER +
-                "get_email_list?user_id=" +
+                "get_solved_email?teacher_id=" +
                 TassApplication.getInstance().getUserID() +
-                "&subject=" + subject_,
+                "&subject=" + subject_ + "&start=0&count=1000",
                 new onHttpResponseListener() {
                     @Override
                     public void onSuccess(final JSONObject jObject) {

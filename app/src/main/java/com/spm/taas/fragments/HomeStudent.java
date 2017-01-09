@@ -125,28 +125,32 @@ public class HomeStudent extends TAASFragment {
 
         LinkedList<DashBoardModel> mainData_ = new LinkedList<DashBoardModel>();
 
-        DashBoardModel temp_ = new DashBoardModel();
-        temp_.setHeader(true);
-        temp_.setHeaderColor(R.color.problems_new);
-        temp_.setHeaderCount(mainObj_.getJSONObject("new_count").getString("total"));
-        temp_.setHeaderName("New Problems");
-        temp_.setSubjectName("Mathematics");
-        temp_.setSubjectCount(mainObj_.getJSONObject("new_count").getString("Mathematics"));
-        mainData_.add(temp_);
+        DashBoardModel temp_;
+
+        if (!TassApplication.getInstance().getUserType().equalsIgnoreCase("teacher")) {
+            temp_ = new DashBoardModel();
+            temp_.setHeader(true);
+            temp_.setHeaderColor(R.color.problems_new);
+            temp_.setHeaderCount(mainObj_.getJSONObject("new_count").getString("total"));
+            temp_.setHeaderName("New Problems");
+            temp_.setSubjectName("Mathematics");
+            temp_.setSubjectCount(mainObj_.getJSONObject("new_count").getString("Mathematics"));
+            mainData_.add(temp_);
 
 
-        temp_ = new DashBoardModel();
-        temp_.setHeader(false);
-        temp_.setSubjectName("Physics");
-        temp_.setSubjectCount(mainObj_.getJSONObject("new_count").getString("Physics"));
-        mainData_.add(temp_);
+            temp_ = new DashBoardModel();
+            temp_.setHeader(false);
+            temp_.setSubjectName("Physics");
+            temp_.setSubjectCount(mainObj_.getJSONObject("new_count").getString("Physics"));
+            mainData_.add(temp_);
 
 
-        temp_ = new DashBoardModel();
-        temp_.setHeader(false);
-        temp_.setSubjectName("Chemistry");
-        temp_.setSubjectCount(mainObj_.getJSONObject("new_count").getString("Chemistry"));
-        mainData_.add(temp_);
+            temp_ = new DashBoardModel();
+            temp_.setHeader(false);
+            temp_.setSubjectName("Chemistry");
+            temp_.setSubjectCount(mainObj_.getJSONObject("new_count").getString("Chemistry"));
+            mainData_.add(temp_);
+        }
 
 
         //=============================
