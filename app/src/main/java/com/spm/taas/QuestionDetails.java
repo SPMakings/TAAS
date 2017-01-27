@@ -182,6 +182,34 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
         //====================
 
 
+        findViewById(R.id.make_payment_one).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(QuestionDetails.this, WebViewActivity.class);
+                i.putExtra("WEB_LINK", TassConstants.URL_DOMAIN_APP_CONTROLLER + "buy_app?user_id=" + TassApplication.getInstance().getUserID() + "&question_id=" + SELECTED_QUESTION_ID + "&package=");
+                startActivityForResult(i, 9000);
+            }
+        });
+
+        findViewById(R.id.make_payment_two).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(QuestionDetails.this, WebViewActivity.class);
+                i.putExtra("WEB_LINK", TassConstants.URL_DOMAIN_APP_CONTROLLER + "buy_app?user_id=" + TassApplication.getInstance().getUserID() + "&question_id=&package=prepaid_15");
+                startActivityForResult(i, 9000);
+            }
+        });
+
+        findViewById(R.id.make_payment_three).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(QuestionDetails.this, WebViewActivity.class);
+                i.putExtra("WEB_LINK", TassConstants.URL_DOMAIN_APP_CONTROLLER + "buy_app?user_id=" + TassApplication.getInstance().getUserID() + "&question_id=&package=prepaid_30");
+                startActivityForResult(i, 9000);
+            }
+        });
+
+
         assignTo.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -333,7 +361,7 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
 
         HttpGetRequest request_ = new HttpGetRequest(TassConstants.URL_DOMAIN_APP_CONTROLLER +
                 "question_details?problem_id=" +
-                questionID_ + "&user_id=1",
+                questionID_ + "&user_id=" + TassApplication.getInstance().getUserID(),
                 new onHttpResponseListener() {
                     @Override
                     public void onSuccess(final JSONObject jObject) {
@@ -411,22 +439,55 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
                                         solutionDesc.setText("Reply : " + solutionJSONBlock.getString("tutor_comment"));
                                         solutionDesc.setVisibility(View.VISIBLE);
                                         JSONArray solnFile_ = solutionJSONBlock.getJSONObject("sol_attachment").getJSONArray("file");
-                                        attachedProbFileSoln.setText("Attached Files (" + solnFile_.length() + ")");
-                                        attachedProbFileSoln.setVisibility(View.VISIBLE);
 
-                                        if (solnFile_.length() > 0) {
+                                        if (TassApplication.getInstance().getUserType().equalsIgnoreCase("student")) {
+                                            Log.i("result_main", solutionJSONBlock.getJSONObject("sol_attachment").toString());
+                                            if (solutionJSONBlock.getJSONObject("sol_attachment").getString("status").equalsIgnoreCase("Buy")) {
 
-                                            solnAttachHolder.setVisibility(View.VISIBLE);
-                                            //=========Solution Attachments Management.
-                                            for (int i = 0; i < answer_file_set.size(); i++) {
-                                                if (solnFile_.length() > i) {
-                                                    answer_file_set.get(i).setVisibility(View.VISIBLE);
-                                                    answer_file_set.get(i).setTag("" + solnFile_.getString(i));
-                                                } else {
-                                                    answer_file_set.get(i).setVisibility(View.GONE);
+                                                attachedProbFileSoln.setText("Attached Files (You have to pay first to view the solution.)");
+                                                attachedProbFileSoln.setVisibility(View.VISIBLE);
+                                                findViewById(R.id.payment_bucket).setVisibility(View.VISIBLE);
+                                                findViewById(R.id.payment_header).setVisibility(View.VISIBLE);
+
+                                            } else {
+                                                attachedProbFileSoln.setText("Attached Files (" + solnFile_.length() + ")");
+                                                attachedProbFileSoln.setVisibility(View.VISIBLE);
+
+
+                                                if (solnFile_.length() > 0) {
+
+
+                                                    solnAttachHolder.setVisibility(View.VISIBLE);
+                                                    //=========Solution Attachments Management.
+                                                    for (int i = 0; i < answer_file_set.size(); i++) {
+                                                        if (solnFile_.length() > i) {
+                                                            answer_file_set.get(i).setVisibility(View.VISIBLE);
+                                                            answer_file_set.get(i).setTag("" + solnFile_.getString(i));
+                                                        } else {
+                                                            answer_file_set.get(i).setVisibility(View.GONE);
+                                                        }
+                                                    }
+
                                                 }
                                             }
+                                        } else {
+                                            attachedProbFileSoln.setText("Attached Files (" + solnFile_.length() + ")");
+                                            attachedProbFileSoln.setVisibility(View.VISIBLE);
 
+
+                                            if (solnFile_.length() > 0) {
+                                                solnAttachHolder.setVisibility(View.VISIBLE);
+                                                //=========Solution Attachments Management.
+                                                for (int i = 0; i < answer_file_set.size(); i++) {
+                                                    if (solnFile_.length() > i) {
+                                                        answer_file_set.get(i).setVisibility(View.VISIBLE);
+                                                        answer_file_set.get(i).setTag("" + solnFile_.getString(i));
+                                                    } else {
+                                                        answer_file_set.get(i).setVisibility(View.GONE);
+                                                    }
+                                                }
+
+                                            }
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -512,6 +573,13 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
                 if (imageCallback != null) {
                     imageCallback.onError("Failed to write file.");
                 }
+            }
+        } else if (requestCode == 9000) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Payment Successfully.", Toast.LENGTH_SHORT).show();
+                getQuestionDetails(getIntent().getStringExtra("QUN_ID"));
+            } else {
+                Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
             }
         } else {
             if (imageCallback != null) {
