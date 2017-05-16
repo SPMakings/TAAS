@@ -25,6 +25,6 @@ public class TextViewIkarosLight extends TextView {
     }
 
     public void init(Context context) {
-        super.setTypeface(FontCache.get("Ikaros-Light.otf", context));
+        super.setTypeface(FontCache.get("Lato-Light.ttf", context));
     }
 }

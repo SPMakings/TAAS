@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_teacher_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.spm.taas.TeacherList"
+    tools:showIn="@layout/activity_teacher_list">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:weightSum="3">
+
+        <com.spm.taas.customview.TextViewIkarosRegular
+            android:id="@+id/phy_teacher"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/tabSelected"
+            android:gravity="center"
+            android:text="Physics"
+            android:textColor="@android:color/white" />
+
+        <com.spm.taas.customview.TextViewIkarosRegular
+            android:id="@+id/chem_teacher"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="Chemistry"
+            android:textColor="@android:color/white" />
+
+        <com.spm.taas.customview.TextViewIkarosRegular
+            android:id="@+id/math_teacher"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="Mathematics"
+            android:textColor="@android:color/white" />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/teacher_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="35dp"
+            android:layout_height="75dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/loader_toggel"
+                android:layout_width="match_parent"
+                android:layout_height="75dp" />
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="35dp" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         card_view:cardCornerRadius="4dp"
         card_view:contentPadding="12dp">
 
@@ -42,6 +42,7 @@
                     android:id="@+id/qun_ttl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="12sp"
                     android:text="Expertise: Physics, Chemistry, Mathematics"
                     android:textColor="@color/colorAccent" />
 

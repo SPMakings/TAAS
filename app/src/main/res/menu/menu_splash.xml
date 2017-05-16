@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.spm.taas.SplashActivity">
 
+    <item
+        android:id="@+id/action_videocall"
+        android:icon="@drawable/ic_action_settings"
+        android:orderInCategory="100"
+        android:title="Video Call"
+        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/action_profile"

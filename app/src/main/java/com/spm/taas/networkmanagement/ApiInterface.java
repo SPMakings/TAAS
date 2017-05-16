@@ -23,10 +23,19 @@ public interface ApiInterface {
                                            @Query("teacher_id") String startIndex_,
                                            @Query("email_id") String rowCount_);
 
-
     @GET("app_control/accept_or_reject")
     Call<JsonObject> getAdminAcceptRejectUser(@Query("teacher_id") String userID_,
                                               @Query("status") String startIndex_);
+
+    @GET("app_control/user_device_token")
+    Call<JsonObject> registerDeviceToken(@Query("user_id") String userID_,
+                                         @Query("device_token") String startIndex_,
+                                         @Query("os_type") String osType_);
+
+
+    @GET("OpenTok-PHP-SDK/get_and_store_session_api.php")
+    Call<JsonObject> requestVideoCall(@Query("teacher_id") String teacher_id,
+                                      @Query("student_id") String student_id);
 
 
 }

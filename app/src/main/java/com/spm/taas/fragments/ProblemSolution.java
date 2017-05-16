@@ -156,6 +156,7 @@ public class ProblemSolution extends TAASFragment {
                                     if (previewHolder.getVisibility() == View.GONE) {
                                         previewHolder.setVisibility(View.VISIBLE);
                                     }
+                                    ((LandingActivity) getActivity()).fetchPictureFromGallery(null);
                                 }
                             });
                         }

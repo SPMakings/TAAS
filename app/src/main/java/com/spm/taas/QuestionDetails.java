@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -627,7 +628,7 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0) {
                 openIntent();
             } else {
                 new AlertDialog.Builder(this)
@@ -668,14 +669,32 @@ public class QuestionDetails extends TAASActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
+
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                File photoFile = null;
                 try {
-                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()));
-                    startActivityForResult(cameraIntent, PICK_CAMERA);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(QuestionDetails.this, "Failed to create file.", Toast.LENGTH_SHORT).show();
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
+
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    try {
+                        Uri photoURI = FileProvider.getUriForFile(QuestionDetails.this,
+                                "com.spm.taas.fileprovider",
+                                photoFile);
+                        cameraIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(cameraIntent, PICK_CAMERA);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(QuestionDetails.this, "Unable to create Image file.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

@@ -3,16 +3,14 @@ package com.spm.taas.application;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import com.cloudinary.Cloudinary;
 import com.spm.taas.models.DashBoardModel;
+import com.spm.taas.networkmanagement.ApiInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -30,7 +28,7 @@ public class TassApplication extends Application {
     private boolean needToRefresh = false;
 
     private static Retrofit retrofit = null;
-    private Cloudinary cloudinary = null;
+    private static ApiInterface apiService = null;
 
     private LinkedList<DashBoardModel> landingList = null;
 
@@ -39,12 +37,7 @@ public class TassApplication extends Application {
         super.onCreate();
         mInstance = this;
         landingList = new LinkedList<DashBoardModel>();
-        if (cloudinary == null) {
-            // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
-            Map config = new HashMap();
-            config.put("cloud_name", "spmakings");
-            cloudinary = new Cloudinary(config);
-        }
+
     }
 
     public static synchronized Retrofit getClient() {
@@ -55,6 +48,22 @@ public class TassApplication extends Application {
                     .build();
         }
         return retrofit;
+    }
+
+
+    public static synchronized ApiInterface getRetrofitClient() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(TassConstants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        if (apiService == null) {
+            apiService = TassApplication.getClient().create(ApiInterface.class);
+        }
+
+
+        return apiService;
     }
 
 
@@ -176,13 +185,4 @@ public class TassApplication extends Application {
     }
 
 
-    public Cloudinary getCloudinator() {
-        if (cloudinary == null) {
-            // cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
-            Map config = new HashMap();
-            config.put("cloud_name", "spmakings");
-            cloudinary = new Cloudinary(config);
-        }
-        return cloudinary;
-    }
 }

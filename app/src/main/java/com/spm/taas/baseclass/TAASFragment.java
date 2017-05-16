@@ -1,6 +1,7 @@
 package com.spm.taas.baseclass;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.View;
 import com.spm.taas.R;
 import com.spm.taas.customview.TextViewIkarosRegular;
 
+import java.util.LinkedList;
+
 /**
  * Created by saikatpakira on 12/10/16.
  */
@@ -16,7 +19,7 @@ import com.spm.taas.customview.TextViewIkarosRegular;
 public class TAASFragment extends Fragment {
 
     private AlertDialog alertDialog = null;
-
+    private LinkedList<AsyncTask> taskQueue = null;
 
     public void showError(final String title, final String message) {
         new AlertDialog.Builder(getActivity())
@@ -61,11 +64,31 @@ public class TAASFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
 
         if (alertDialog != null) {
             alertDialog.dismiss();
         }
+    }
+
+    public void addToThreadPool(final AsyncTask task_) {
+        if (taskQueue == null) {
+            taskQueue = new LinkedList<AsyncTask>();
+        }
+        taskQueue.add(task_);
+        task_.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (taskQueue != null) {
+            for (AsyncTask task_ : taskQueue) {
+                task_.cancel(true);
+            }
+        }
+
     }
 }

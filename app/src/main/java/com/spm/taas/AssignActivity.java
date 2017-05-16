@@ -38,6 +38,8 @@ public class AssignActivity extends TAASActivity {
     private JsonArray teacherArray = null;
     private boolean needRefresh = false;
 
+    private int lazyLoadingCunter = 20;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

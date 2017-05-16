@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonObject;
 import com.spm.taas.application.CircleTransform;
 import com.spm.taas.application.OnImageFetched;
 import com.spm.taas.application.RealPathHelper;
@@ -40,6 +43,7 @@ import com.spm.taas.fragments.HomeStudent;
 import com.spm.taas.fragments.ProblemSolution;
 import com.spm.taas.fragments.ProblemsUpload;
 import com.spm.taas.fragments.StatusFragment;
+import com.spm.taas.networkmanagement.ApiInterface;
 import com.spm.taas.networkmanagement.HttpGetRequest;
 import com.spm.taas.networkmanagement.HttpPostRequest;
 import com.spm.taas.networkmanagement.KeyValuePairModel;
@@ -54,6 +58,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LandingActivity extends TAASActivity {
 
@@ -78,6 +86,9 @@ public class LandingActivity extends TAASActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+
+
+        Log.i("Firebase", "" + FirebaseInstanceId.getInstance().getToken());
 
         header_prof_img = (ImageView) findViewById(R.id.header_prof_image);
         header_prof_name = (TextViewIkarosRegular) findViewById(R.id.header_profile_name);
@@ -165,6 +176,13 @@ public class LandingActivity extends TAASActivity {
 
             }
         });
+
+
+        //======FCM Registration
+        if (!TassApplication.getInstance().getUserID().equals("")) {
+            sendRegistrationToServer(FirebaseInstanceId.getInstance().getToken());
+        }
+
     }
 
 
@@ -238,6 +256,12 @@ public class LandingActivity extends TAASActivity {
 
         } else if (item.getItemId() == R.id.action_password) {
             editPassword();
+        } else if (item.getItemId() == R.id.action_videocall) {
+
+            //Intent i = new Intent(LandingActivity.this, VideoChatActivity.class);
+            Intent i = new Intent(LandingActivity.this, TeacherList.class);
+            startActivity(i);
+
         } else {
             //Toast.makeText(this, "Working on...", Toast.LENGTH_SHORT).show();
             editImage();
@@ -248,42 +272,49 @@ public class LandingActivity extends TAASActivity {
 
 
     private boolean isReadStorageAllowed() {
-        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             return true;
-        return false;
+        } else {
+            return false;
+        }
     }
 
 
     private void requestStoragePermission() {
 
-        String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        final String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
 
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
 
             new AlertDialog.Builder(this)
                     .setTitle("Permission")
                     .setMessage("Oops! you just denied the permission. Without this permission " +
-                            "TAAS can't get image from your phone. Do you want to allow us?")
+                            "TAAS can't upload image from your phone or camera. Do you want to allow us?")
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+
                         }
                     }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    requestStoragePermission();
+                    ActivityCompat.requestPermissions(LandingActivity.this, PERMISSIONS, STORAGE_PERMISSION_CODE);
                 }
             }).show();
 
+        } else {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, STORAGE_PERMISSION_CODE);
         }
-        ActivityCompat.requestPermissions(this, PERMISSIONS, STORAGE_PERMISSION_CODE);
+
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0) {
                 openIntent();
             } else {
                 new AlertDialog.Builder(this)
@@ -293,6 +324,7 @@ public class LandingActivity extends TAASActivity {
                                 ". Do you want to allow us?")
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+
                             }
                         }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -305,15 +337,23 @@ public class LandingActivity extends TAASActivity {
     }
 
     public void fetchPictureFromGallery(OnImageFetched imageCallback) {
+
         this.imageCallback = imageCallback;
-        if (isReadStorageAllowed()) {
-            openIntent();
-        } else {
-            requestStoragePermission();
+
+        if (imageCallback != null) {
+            if (isReadStorageAllowed()) {
+                openIntent();
+            } else {
+                requestStoragePermission();
+            }
         }
+
     }
 
     private void openIntent() {
+
+        Log.i("imagepath", "Called....");
+
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_chooser, null);
@@ -324,14 +364,32 @@ public class LandingActivity extends TAASActivity {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
+
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                File photoFile = null;
                 try {
-                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()));
-                    startActivityForResult(cameraIntent, PICK_CAMERA);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(LandingActivity.this, "Failed to create file.", Toast.LENGTH_SHORT).show();
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
+
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    try {
+                        Uri photoURI = FileProvider.getUriForFile(LandingActivity.this,
+                                "com.spm.taas.fileprovider",
+                                photoFile);
+                        cameraIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(cameraIntent, PICK_CAMERA);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(LandingActivity.this, "Unable to create Image file.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -759,6 +817,35 @@ public class LandingActivity extends TAASActivity {
             }
         });
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    private void sendRegistrationToServer(String token) {
+        ApiInterface apiService = TassApplication.getClient().create(ApiInterface.class);
+        Call<JsonObject> call = apiService.registerDeviceToken(TassApplication.getInstance().getUserID(), token, "A");
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                if (response.code() == 200) {
+                    Log.i("PushFired", "200");
+                } else {
+                    try {
+                        Log.e("User", response.errorBody().string().toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // Log error here since request failed
+                Log.e("assign", t.toString());
+
+            }
+        });
     }
 
 }

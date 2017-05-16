@@ -25,6 +25,6 @@ public class TextViewIkarosRegular extends TextView {
     }
 
     public void init(Context context) {
-        super.setTypeface(FontCache.get("Ikaros-Regular.otf", context));
+        super.setTypeface(FontCache.get("Lato-Regular.ttf", context));
     }
 }

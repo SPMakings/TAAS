@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "906965874195",
+    "firebase_url": "https://taas-c4b1f.firebaseio.com",
+    "project_id": "taas-c4b1f",
+    "storage_bucket": "taas-c4b1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906965874195:android:886e8a4324458202",
+        "android_client_info": {
+          "package_name": "com.spm.taas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906965874195-6qnes13mbb037fisg0cp78bm2h26qnct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spm.taas",
+            "certificate_hash": "3de99267433b2ee52d5e04e0f45ef520588651ca"
+          }
+        },
+        {
+          "client_id": "906965874195-a830i3qu6kedoapb811282jaq83bkt8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUYB09SzMqgSX2Hdtb_FevBj4vHSSKr4U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906965874195-a830i3qu6kedoapb811282jaq83bkt8e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

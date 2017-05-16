@@ -1,17 +1,14 @@
 package com.spm.taas.fragments;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Base64OutputStream;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,22 +17,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.cloudinary.Cloudinary;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
 import com.spm.taas.adapters.ProblemPreviewAdapter;
-import com.spm.taas.application.CircleTransform;
 import com.spm.taas.application.OnImageFetched;
 import com.spm.taas.application.TassApplication;
 import com.spm.taas.application.TassConstants;
 import com.spm.taas.baseclass.TAASFragment;
-import com.spm.taas.networkmanagement.HttpGetRequest;
 import com.spm.taas.networkmanagement.HttpPostRequest;
 import com.spm.taas.networkmanagement.KeyValuePairModel;
 import com.spm.taas.networkmanagement.OkHttpFileUploadRequest;
@@ -44,17 +36,12 @@ import com.spm.taas.networkmanagement.onHttpResponseListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Created by saikatpakira on 23/10/16.
@@ -127,6 +114,9 @@ public class ProblemsUpload extends TAASFragment {
             @Override
             public void onClick(View v) {
 
+                Log.i("imagepath", "Called...."+ FirebaseInstanceId.getInstance().getToken());
+
+
                 if (pAdapter.getCUrrentArray().size() < 3) {
                     ((LandingActivity) getActivity()).fetchPictureFromGallery(new OnImageFetched() {
                         @Override
@@ -139,6 +129,7 @@ public class ProblemsUpload extends TAASFragment {
                                     if (previewHolder.getVisibility() == View.GONE) {
                                         previewHolder.setVisibility(View.VISIBLE);
                                     }
+                                    ((LandingActivity) getActivity()).fetchPictureFromGallery(null);
                                 }
                             });
                         }
@@ -347,38 +338,38 @@ public class ProblemsUpload extends TAASFragment {
     //===========Cloudinayr Upload.
 
 
-    private class UploadImage extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            //selectedImages.get(0)
-
-            File file = new File(selectedImages.get(0));
-            try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-
-                Map config = new HashMap();
-                config.put("public_id", "abdbasdasda76asd7sa789");
-                config.put("signature", "cOKO0XAc8VNEMhU6xoGZzNcGaXA");
-                config.put("timestamp", "1346925631");
-                config.put("api_key", "124414451557244");
-                Map config2 = new HashMap();
-                config.put("cloud_name", "spmakings");
-//                Cloudinary  cloudinary = new Cloudinary(config2);
-                Cloudinary cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
-
-                JSONObject resultObj_ = cloudinary.uploader().upload(fileInputStream, new HashMap());
-                Log.i("cloudinator", resultObj_.toString());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            return null;
-        }
-    }
+//    private class UploadImage extends AsyncTask<Void, Void, Void> {
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//
+//            //selectedImages.get(0)
+//
+//            File file = new File(selectedImages.get(0));
+//            try {
+//                FileInputStream fileInputStream = new FileInputStream(file);
+//
+//                Map config = new HashMap();
+//                config.put("public_id", "abdbasdasda76asd7sa789");
+//                config.put("signature", "cOKO0XAc8VNEMhU6xoGZzNcGaXA");
+//                config.put("timestamp", "1346925631");
+//                config.put("api_key", "124414451557244");
+//                Map config2 = new HashMap();
+//                config.put("cloud_name", "spmakings");
+////                Cloudinary  cloudinary = new Cloudinary(config2);
+//                Cloudinary cloudinary = new Cloudinary("cloudinary://124414451557244:cOKO0XAc8VNEMhU6xoGZzNcGaXA@spmakings");
+//
+//                JSONObject resultObj_ = cloudinary.uploader().upload(fileInputStream, new HashMap());
+//                Log.i("cloudinator", resultObj_.toString());
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//            return null;
+//        }
+//    }
 
 
     private class Base64Converter extends AsyncTask<Void, Void, Void> {
@@ -458,4 +449,10 @@ public class ProblemsUpload extends TAASFragment {
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        //((LandingActivity) getActivity()).fetchPictureFromGallery(null);
+    }
 }
