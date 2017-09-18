@@ -17,4 +17,9 @@
     <string name="buttonText">Click to begin please</string>
     <string name="title_activity_video_call">VideoCallActivity</string>
     <string name="title_activity_teacher_list">TeacherList</string>
+    <string name="title_activity_dialer_panel">DialerPanel</string>
+    <string name="title_activity_landing_new">LandingActivityNew</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

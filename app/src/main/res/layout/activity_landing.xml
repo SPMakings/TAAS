@@ -31,36 +31,13 @@
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical">
 
-                    <ImageView
-                        android:id="@+id/header_prof_image"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/profile_circle" />
-
-                    <LinearLayout
+                    <com.spm.taas.customview.TextViewIkarosRegular
+                        android:id="@+id/header_profile_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:orientation="vertical">
-
-                        <com.spm.taas.customview.TextViewIkarosRegular
-                            android:id="@+id/header_profile_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Saikat Pakira"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <com.spm.taas.customview.TextViewIkarosLight
-                            android:id="@+id/header_profile_type"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="STUDENT"
-                            android:textColor="@android:color/white"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
+                        android:text="HOME"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <ImageView

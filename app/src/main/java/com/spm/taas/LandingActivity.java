@@ -15,6 +15,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,6 +52,7 @@ import com.spm.taas.networkmanagement.HttpPostRequest;
 import com.spm.taas.networkmanagement.KeyValuePairModel;
 import com.spm.taas.networkmanagement.OkHttpFileUploadRequest;
 import com.spm.taas.networkmanagement.onHttpResponseListener;
+import com.spm.taas.services.RingManagerService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,8 +70,8 @@ import retrofit2.Response;
 public class LandingActivity extends TAASActivity {
 
     private ImageView header_prof_img = null;
-    private TextViewIkarosRegular header_prof_name = null;
-    private TextViewIkarosLight header_prof_type = null, uploadText = null;
+    private TextViewIkarosRegular header_prof_name = null,header_prof_type = null;
+    private TextViewIkarosLight  uploadText = null;
     private final int STORAGE_PERMISSION_CODE = 1, PICK_IMAGE = 100, PICK_CAMERA = 200;
     private OnImageFetched imageCallback = null;
     private View footer_home, footer_upload, footer_subjects;
@@ -78,21 +82,30 @@ public class LandingActivity extends TAASActivity {
     //=======Chnage Passsword Dilaog.
 
     private AlertDialog dlog_ = null;
+    private DrawerLayout drawerMain=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landing);
+        setContentView(R.layout.activity_landing_new);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
+        drawerMain = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerMain, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerMain.addDrawerListener(toggle);
+        toggle.syncState();
+        //======
+
 
         Log.i("Firebase", "" + FirebaseInstanceId.getInstance().getToken());
 
-        header_prof_img = (ImageView) findViewById(R.id.header_prof_image);
-        header_prof_name = (TextViewIkarosRegular) findViewById(R.id.header_profile_name);
-        header_prof_type = (TextViewIkarosLight) findViewById(R.id.header_profile_type);
+        header_prof_img = (ImageView) findViewById(R.id.draw_profileimage);
+        header_prof_name = (TextViewIkarosRegular) findViewById(R.id.draw_profilename);
+        header_prof_type = (TextViewIkarosRegular) findViewById(R.id.draw_profiledesig);
         uploadText = (TextViewIkarosLight) findViewById(R.id.upload_text);
 
         if (TassApplication.getInstance().getUserType().equalsIgnoreCase("admin")) {
@@ -178,6 +191,77 @@ public class LandingActivity extends TAASActivity {
         });
 
 
+        //=========Left drawer Management
+
+
+        findViewById(R.id.draw_home).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                footer_home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.tabSelected));
+                footer_upload.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                footer_subjects.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                openSplashPaqe();
+            }
+        });
+
+
+        findViewById(R.id.draw_video_call).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerMain.closeDrawer(GravityCompat.START);
+                Intent i = new Intent(LandingActivity.this, TeacherList.class);
+                startActivity(i);
+            }
+        });
+
+        findViewById(R.id.draw_edit_prof).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerMain.closeDrawer(GravityCompat.START);
+                Intent i = new Intent(LandingActivity.this, EditProfile.class);
+                startActivity(i);
+            }
+        });
+
+
+        findViewById(R.id.draw_chnge_pass).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerMain.closeDrawer(GravityCompat.START);
+                editPassword();
+            }
+        });
+
+        findViewById(R.id.draw_edit_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerMain.closeDrawer(GravityCompat.START);
+                editImage();
+            }
+        });
+
+        findViewById(R.id.draw_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerMain.closeDrawer(GravityCompat.START);
+                new AlertDialog.Builder(LandingActivity.this)
+                        .setTitle("TAAS")
+                        .setMessage("Do you want to logout?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                                logMeOut();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
         //======FCM Registration
         if (!TassApplication.getInstance().getUserID().equals("")) {
             sendRegistrationToServer(FirebaseInstanceId.getInstance().getToken());
@@ -221,55 +305,6 @@ public class LandingActivity extends TAASActivity {
         fragmentTransaction.replace(R.id.landing_fragment_bucket, new StatusFragment());
         fragmentTransaction.commit();
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_splash, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.action_logput) {
-            new AlertDialog.Builder(LandingActivity.this)
-                    .setTitle("TAAS")
-                    .setMessage("Do you want to logout?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                            logMeOut();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        } else if (item.getItemId() == R.id.action_profile) {
-
-            Intent i = new Intent(LandingActivity.this, EditProfile.class);
-            startActivity(i);
-
-        } else if (item.getItemId() == R.id.action_password) {
-            editPassword();
-        } else if (item.getItemId() == R.id.action_videocall) {
-
-            //Intent i = new Intent(LandingActivity.this, VideoChatActivity.class);
-            Intent i = new Intent(LandingActivity.this, TeacherList.class);
-            startActivity(i);
-
-        } else {
-            //Toast.makeText(this, "Working on...", Toast.LENGTH_SHORT).show();
-            editImage();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     private boolean isReadStorageAllowed() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED

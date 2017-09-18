@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@drawable/drawer_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/draw_profileimage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY" />
+
+        <com.spm.taas.customview.TextViewIkarosRegular
+            android:id="@+id/draw_profilename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#90FFFFFF"
+            android:padding="6dp"
+            android:text="Saikat Pakira"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <com.spm.taas.customview.TextViewIkarosRegular
+            android:id="@+id/draw_profiledesig"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#90FFFFFF"
+            android:padding="6dp"
+            android:text="TEACHER"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/draw_home"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="Home"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cardview_light_background" />
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/draw_video_call"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="Video Call"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cardview_light_background" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/draw_edit_prof"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="Edit Profile"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cardview_light_background" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/draw_chnge_pass"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="Change Password"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cardview_light_background" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/draw_edit_image"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="Edit Image"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cardview_light_background" />
+
+
+            <com.spm.taas.customview.TextViewIkarosRegular
+                android:id="@+id/draw_logout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="Logout"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cardview_light_background" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

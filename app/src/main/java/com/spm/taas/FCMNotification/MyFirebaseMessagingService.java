@@ -1,5 +1,6 @@
 package com.spm.taas.FCMNotification;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,6 +14,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.spm.taas.LandingActivity;
 import com.spm.taas.R;
+import com.spm.taas.services.RingManagerService;
 
 import org.json.JSONObject;
 
@@ -44,7 +46,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             *
             * */
 
-            sendNotification(object.getString("message"));
+            //sendNotification(object.getString("message"));
+            Intent i=new Intent(this, RingManagerService.class);
+            i.setAction("com.sp.taas.ACTION_START");
+            startService(i);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +75,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle("TAAS")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
+                .setPriority(Notification.VISIBILITY_PUBLIC)
+                .setSound(defaultSoundUri).setFullScreenIntent(pendingIntent,true)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
